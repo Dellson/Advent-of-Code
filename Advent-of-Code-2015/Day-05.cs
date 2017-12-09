@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-namespace Advent_of_Code_2015
+﻿namespace Advent_of_Code_2015
 {
     class Day_05
     {
@@ -40,7 +33,7 @@ namespace Advent_of_Code_2015
                         break;
                     }
             }
-            Console.WriteLine("Puzzle one answer: " + count);
+            System.Console.WriteLine("Puzzle one answer: " + count);
         }
 
         private static void PuzzleTwo()
@@ -49,7 +42,7 @@ namespace Advent_of_Code_2015
 
             foreach (string input in rawInput)
             {
-                List<string> pairs = new List<string>();
+                System.Collections.Generic.List<string> pairs = new System.Collections.Generic.List<string>();
                 bool passed = false;
                 for (int i = 1; i < input.Length; ++i)
                 {
@@ -74,7 +67,7 @@ namespace Advent_of_Code_2015
                         break;
                     }
             }
-            Console.WriteLine("Puzzle two answer: " + count);
+            System.Console.WriteLine("Puzzle two answer: " + count);
         }
     }
 }
