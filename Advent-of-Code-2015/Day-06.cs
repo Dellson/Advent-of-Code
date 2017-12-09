@@ -1,16 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Advent_of_Code_2015
 {
     class Day_06
     {
         private static string[] input = System.IO.File.ReadAllLines(Program.InputFolderPath + "Day-06-input.txt");
+        private static List<Tuple<int, int, int, int, int>> commands = new List<Tuple<int, int, int, int, int>>();
         const int size = 1000;
+
+        static Day_06()
+        {
+            foreach (string line in input)
+            {
+                int mode = 0;
+                var matches = Regex.Matches(line, @"\d+");
+
+                if (line.Contains("turn on"))
+                    mode = 1;
+                if (line.Contains("turn off"))
+                    mode = -1;
+
+                commands.Add(new Tuple<int, int, int, int, int>(
+                    mode,
+                    Convert.ToInt32(matches[0].Value),
+                    Convert.ToInt32(matches[1].Value),
+                    Convert.ToInt32(matches[2].Value),
+                    Convert.ToInt32(matches[3].Value)));
+            }
+        }
 
         public static void BothStars()
         {
@@ -22,24 +41,21 @@ namespace Advent_of_Code_2015
         {
             bool[,] lightsArray = new bool[size, size];
 
-
             for (int i = 0; i < size; ++i)
                 for (int j = 0; j < size; ++j)
                     lightsArray[i, j] = false;
 
-            foreach (string line in input)
+            foreach (var line in commands)
             {
-                var matches = Regex.Matches(line, @"\d+");
-
-                for (int i = Convert.ToInt32(matches[0].Value); i <= Convert.ToInt32(matches[2].Value); ++i)
+                for (int i = line.Item2; i <= line.Item4; ++i)
                 {
-                    for (int j = Convert.ToInt32(matches[1].Value); j <= Convert.ToInt32(matches[3].Value); ++j)
+                    for (int j = line.Item3; j <= line.Item5; ++j)
                     {
-                        if (line.Contains("toggle"))
+                        if (line.Item1 == 0)
                             lightsArray[i, j] = !lightsArray[i, j];
-                        if (line.Contains("turn on"))
+                        if (line.Item1 == 1)
                             lightsArray[i, j] = true;
-                        if (line.Contains("turn off"))
+                        if (line.Item1 == -1)
                             lightsArray[i, j] = false;
                     }
                 }
@@ -62,20 +78,18 @@ namespace Advent_of_Code_2015
                 for (int j = 0; j < size; ++j)
                     lightsArray[i,j] = 0;
 
-            foreach (string s in input)
+            foreach (var line in commands)
             {
-                var matches = Regex.Matches(s, @"\d+");
-
-                for (int i = Convert.ToInt32(matches[0].Value); i <= Convert.ToInt32(matches[2].Value); ++i)
+                for (int i = line.Item2; i <= line.Item4; ++i)
                 {
-                    for (int j = Convert.ToInt32(matches[1].Value); j <= Convert.ToInt32(matches[3].Value); ++j)
+                    for (int j = line.Item3; j <= line.Item5; ++j)
                     {
-                        if (s.Contains("toggle"))
-                            lightsArray[i,j] += 2;
-                        if (s.Contains("turn on"))
-                            lightsArray[i,j] += 1;
-                        if (s.Contains("turn off"))
-                            lightsArray[i,j] -= (lightsArray[i,j] == 0 ? 0 : 1);
+                        if (line.Item1 == 0)
+                            lightsArray[i, j] += 2;
+                        if (line.Item1 == 1)
+                            lightsArray[i, j] += 1;
+                        if (line.Item1 == -1)
+                            lightsArray[i, j] -= (lightsArray[i, j] == 0 ? 0 : 1);
                     }
                 }
             }
