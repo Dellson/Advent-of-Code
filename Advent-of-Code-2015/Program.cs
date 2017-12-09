@@ -16,7 +16,8 @@ namespace Advent_of_Code_2015
         {
             //Day_01.BothStars();
             //Day_02.BothStars();
-            Day_03.BothStars();
+            //Day_03.BothStars();
+            Day_04.BothStars();
 
             ReadKey();
         }
