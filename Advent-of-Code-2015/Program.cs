@@ -14,7 +14,8 @@ namespace Advent_of_Code_2015
 
         static void Main(string[] args)
         {
-            Day_01.BothStars();
+            //Day_01.BothStars();
+            Day_02.BothStars();
 
             ReadKey();
         }

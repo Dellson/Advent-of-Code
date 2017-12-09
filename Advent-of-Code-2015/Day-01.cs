@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Advent_of_Code_2015
+﻿namespace Advent_of_Code_2015
 {
     class Day_01
     {
-        private static string input = File.ReadAllLines(Program.InputFolderPath + "Day-01-input.txt")[0];
+        private static string input = System.IO.File.ReadAllLines(Program.InputFolderPath + "Day-01-input.txt")[0];
 
         public static void BothStars()
         {
@@ -28,8 +21,8 @@ namespace Advent_of_Code_2015
                 }
             }
 
-            Console.WriteLine(floor);
-            Console.WriteLine(position);
+            System.Console.WriteLine(floor);
+            System.Console.WriteLine(position);
         }
     }
 }
