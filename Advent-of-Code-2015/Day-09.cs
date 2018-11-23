@@ -8,77 +8,45 @@ namespace Advent_of_Code_2015
     class Day_09
     {
         private static readonly string[] _input = System.IO.File.ReadAllLines(Program.InputFolderPath + "Day-09-input.txt");
+        static List<Tuple<string, string, int>> _connections = new List<Tuple<string, string, int>>();
 
         public static void BothStars()
         {
-            int counter = 1;
-            Dictionary<string, int> cities = new Dictionary<string, int>();
+            List<string> cities = new List<string>();
 
             foreach (string str in _input)
             {
                 var cityA = Regex.Matches(str, @"\w+")[0].Value;
                 var cityB = Regex.Matches(str, @"\w+")[2].Value;
-                var distance = Regex.Matches(str, @"\d+")[0].Value;
+                var distance = Convert.ToInt32(Regex.Matches(str, @"\d+")[0].Value);
 
-                if (!cities.ContainsKey(cityA)) cities.Add(cityA, counter++);
-                if (!cities.ContainsKey(cityB)) cities.Add(cityB, counter++);
+                if (!cities.Contains(cityA)) cities.Add(cityA);
+                if (!cities.Contains(cityB)) cities.Add(cityB);
+
+                _connections.Add(new Tuple<string, string, int>(cityA, cityB, distance));
+                _connections.Add(new Tuple<string, string, int>(cityB, cityA, distance));
             }
 
-            //cities.Values.ToList().ForEach(c => Console.WriteLine(c));
-            var conns = GetKCombs(cities.Values.ToList(), 2);
-            var connections = new List<List<int>>();
+            List<int> distances = new List<int>();
 
-            foreach (var c in conns)
+            foreach (var route in GetPermutations(cities, cities.Count).Select(p => p.ToList()).ToList())
             {
-                var comb = c.ToList();
-                connections.Add(comb);
-                comb.Reverse();
-                connections.Add(comb);
+                int dist = 0;
+                for (int i = 1; i < route.Count; i++)
+                    dist += _connections.First(c => c.Item1 == route[i - 1] && c.Item2 == route[i]).Item3;
+
+                distances.Add(dist);
             }
-
-            foreach (var c in conns)
-            {
-                var comb = c.ToList();
-                connections.Add(comb);
-                comb.Reverse();
-                connections.Add(comb);
-            }
-
-            connections.ForEach(c => Console.WriteLine(c));
-
-            List<string> route = new List<string>();
-            List<List<string>> routes = new List<List<string>>();
-
-            /*foreach (var conn in connections)
-            {
-                route.Add(string.Join(" ", conn.ToArray()));
-            }
-            var r = GetKCombs(route, 2);
-
-            foreach (var c in r)
-            {
-                var comb = c.ToList();
-                Console.WriteLine($"{comb[0]} {comb[1]}");
-            }*/
-
-            /*foreach (var c in conns)
-            {
-                var comb = c.ToList();
-                Console.WriteLine($"{comb[0]} {comb[1]}");
-            }*/
+            Console.WriteLine(distances.Min());
+            Console.WriteLine(distances.Max());
         }
 
-        private static void GetScenarios()
-        {
-
-        }
-
-        private static IEnumerable<IEnumerable<T>> GetKCombs<T>(IEnumerable<T> list, int length) where T : IComparable
+        static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length)
         {
             if (length == 1) return list.Select(t => new T[] { t });
 
-            return GetKCombs(list, length - 1)
-                .SelectMany(t => list.Where(o => o.CompareTo(t.Last()) > 0),
+            return GetPermutations(list, length - 1)
+                .SelectMany(t => list.Where(e => !t.Contains(e)),
                     (t1, t2) => t1.Concat(new T[] { t2 }));
         }
     }
