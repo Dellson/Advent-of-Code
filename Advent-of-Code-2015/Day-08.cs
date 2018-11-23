@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Advent_of_Code_2015
 {
@@ -6,51 +7,32 @@ namespace Advent_of_Code_2015
     {
         private static readonly string[] input = System.IO.File.ReadAllLines(Program.InputFolderPath + "Day-08-input.txt");
 
-        public static void StarOne()
+        public static void BothStars()
         {
-            int counter = 0;
-            int counter2 = 0;
-            foreach (var line in input)
-            {
-                counter2 += line.Length;
-                for (int i = 1; i < line.Length-1; i++)
-                {
-                    if (line[i] == '\\')
-                    {
-                        i++;
-                        if (line[i] == 'x')
-                        {
-                            i += 2;
-                        }
-                    }
-                    counter++;
-                }
-            }
-            Console.WriteLine(counter2 - counter);
-        }
-        public static void StarTwo()
-        {
-            int counter = 0;
+            int firstStarCounter = 0;
+            int secondStarCounter = 0;
 
             foreach (var line in input)
             {
-                counter += 4;
-                for (int i = 1; i < line.Length - 1; i++)
+                secondStarCounter += 4;
+
+                for (int i = 1; i < line.Length-1; i++, firstStarCounter++)
                 {
                     if (line[i] == '\\' || line[i] == '\"')
                     {
-                        i ++;
-                        counter += 2;
+                        i++;
+                        secondStarCounter += 2;
 
-                        if (i > 0 && i < line.Length && line[i] == 'x')
+                        if (line[i] == 'x')
                         {
                             i += 2;
-                            counter--;
-                        }
+                            secondStarCounter--;
+                        } 
                     }
                 }
             }
-            Console.WriteLine(counter);
+            Console.WriteLine(input.Sum(l => l.Length) - firstStarCounter);
+            Console.WriteLine(secondStarCounter);
         }
     }
 }
