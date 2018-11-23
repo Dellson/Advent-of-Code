@@ -21,7 +21,8 @@ namespace Advent_of_Code_2015
             //Day_05.BothStars();
             //Day_06.BothStars();
             //Day_07.BothStars();
-            Day_08.RemoveSpecialChars();
+            Day_08.StarOne();
+            Day_08.StarTwo();
             //Day_09.BothStars();
             ReadKey();
         }
