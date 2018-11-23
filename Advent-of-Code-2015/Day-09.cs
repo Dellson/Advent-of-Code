@@ -30,15 +30,10 @@ namespace Advent_of_Code_2015
             List<int> distances = new List<int>();
 
             foreach (var route in GetPermutations(cities, cities.Count).Select(p => p.ToList()).ToList())
-            {
-                int dist = 0;
-                for (int i = 1; i < route.Count; i++)
-                    dist += _connections.First(c => c.Item1 == route[i - 1] && c.Item2 == route[i]).Item3;
+                distances.Add(Enumerable.Range(1, route.Count - 1).ToList()
+                    .Sum(i => _connections.First(c => c.Item1 == route[i - 1] && c.Item2 == route[i]).Item3));
 
-                distances.Add(dist);
-            }
-            Console.WriteLine(distances.Min());
-            Console.WriteLine(distances.Max());
+            Console.WriteLine($"{distances.Min()}\n{distances.Max()}");
         }
 
         static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length)
