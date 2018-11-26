@@ -21,9 +21,9 @@ namespace Advent_of_Code_2015
             //Day_05.BothStars();
             //Day_06.BothStars();
             //Day_07.BothStars();
-            Day_08.BothStars();
-            Day_08.StarTwo();
+            //Day_08.BothStars();
             //Day_09.BothStars();
+            Day_10.ElvesLookElvesSay();
             ReadKey();
         }
     }
