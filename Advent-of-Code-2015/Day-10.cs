@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Advent_of_Code_2015
 {
@@ -10,15 +7,14 @@ namespace Advent_of_Code_2015
     {
         public static void ElvesLookElvesSay()
         {
-            string inp = "21";
-            char current = inp[0];
             int count = 0;
-            StringBuilder sb;
+            StringBuilder sb = new StringBuilder("1321131112");
 
-            for (int j = 0; j < 1; j++)
+            for (int j = 0; j < 50; j++)
             {
-                string input = inp;
+                string input = sb.ToString();
                 sb = new StringBuilder();
+                char current = input[0];
 
                 for (int i = 0; i < input.Length; i++)
                 {
@@ -30,17 +26,16 @@ namespace Advent_of_Code_2015
                     sb.Append(count);
                     sb.Append(current);
 
+                    count = 0;
+
                     if (i == input.Length)
                         break;
 
                     current = input[i];
-                    count = 0;
                     i--;
                 }
-                inp = sb.ToString();
             }
-
-            Console.WriteLine(inp.ToString());
+            Console.WriteLine(sb.ToString().Length);
         }
     }
 }

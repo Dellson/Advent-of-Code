@@ -23,7 +23,8 @@ namespace Advent_of_Code_2015
             //Day_07.BothStars();
             //Day_08.BothStars();
             //Day_09.BothStars();
-            Day_10.ElvesLookElvesSay();
+            //Day_10.ElvesLookElvesSay();
+            Day_11.Challenge();
             ReadKey();
         }
     }
