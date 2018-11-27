@@ -8,65 +8,40 @@ namespace Advent_of_Code_2015
     {
         public static void Challenge()
         {
-            StringBuilder sb = new StringBuilder("cqjxxyzz");
-            
-            while (true)
-            {
-                sb = IncrementString(sb);
+            string current = "cqjxjnds";
+            //string current = "cqjxxyzz";
 
-                if (VerifyReq1(sb.ToString()) && VerifyReq2(sb.ToString()) && VerifyReq3(sb.ToString()))
-                    break;
-            }
-            Console.WriteLine(sb.ToString());
+            do { current = IncrementString(current); }
+            while (!(VerifyReq1(current) && VerifyReq2(current) && VerifyReq3(current)));
+                
+            Console.WriteLine(current);
         }
 
-        private static StringBuilder IncrementString(StringBuilder sb)
+        private static string IncrementString(string current)
         {
-                bool isIncremented = false;
-                StringBuilder temp = new StringBuilder();
-                string current = sb.ToString();
+            StringBuilder temp = new StringBuilder(current);
                 
-                for (int i = current.Length - 1; i >= 0; i--)
+            for (int i = current.Length - 1; i >= 0; i--)
+            {
+                char c = Convert.ToChar(current[i] + 1);
+
+                if (c <= 122)
                 {
-                    if (!isIncremented)
-                    {
-                        char c = Convert.ToChar(current[i] + 1);
-
-                        if (c <= 122)
-                        {
-                            isIncremented = true;
-                            temp.Append(c);
-                            continue;
-                        }
-                        else if (c >= 123)
-                        {
-                            temp.Append('a');
-                        }
-                            
-                    }
-                    else
-                        temp.Append(current[i]);
+                    temp[i] = c;
+                    break;
                 }
+                if (c == 123)
+                    temp[i] = 'a';
+            }
 
-                string s = temp.ToString();
-                sb = new StringBuilder();
-
-            
-
-                for (int i = s.Length - 1; i >= 0; i--)
-                    sb.Append(s[i]);
-
-            return sb;
+            return temp.ToString();
         }
 
         private static bool VerifyReq1(string s)
         {
-            for (int i = 0; i < 6; i++)
-            {
+            for (int i = 0; i < s.Length - 2; i++)
                 if (s[i + 0] == s[i + 1] - 1 && s[i + 1] == s[i + 2] - 1)
                     return true;
-            }
-
             return false;
         }
 
@@ -74,7 +49,6 @@ namespace Advent_of_Code_2015
         {
             if (s.Contains("i") || s.Contains("o") || s.Contains("l"))
                 return false;
-            
             return true;
         }
 
@@ -82,18 +56,13 @@ namespace Advent_of_Code_2015
         {
             char firstLetter = ' ';
 
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < s.Length - 1; i++)
             {
                 if (firstLetter != ' ' && s[i] != firstLetter && s[i] == s[i + 1])
                     return true;
-
                 if (s[i] == s[i + 1])
-                {
-                    firstLetter = s[i];
-                    i++;
-                }
+                    firstLetter = s[i++];
             }
-            
             return false;
         }
     }
