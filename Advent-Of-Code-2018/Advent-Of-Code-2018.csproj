@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{DBD72CC2-A66C-49D4-8997-34D38A7B3493}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Advent_Of_Code_2018</RootNamespace>
-    <AssemblyName>Advent-Of-Code-2018</AssemblyName>
+    <RootNamespace>Advent_of_Code_2018</RootNamespace>
+    <AssemblyName>Advent-of-Code-2018</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
