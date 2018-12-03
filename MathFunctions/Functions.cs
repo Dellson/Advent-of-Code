@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MathFunctions
 {
-    class Program
+    class Functions
     {
         static void Main(string[] args)
         {

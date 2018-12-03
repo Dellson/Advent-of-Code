@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 using static System.Console;
+using static Helpers.Helpers;
 
 namespace Advent_of_Code_2015
 {
@@ -70,15 +72,6 @@ namespace Advent_of_Code_2015
 
             foreach (var guest in _guests.Keys)
                 _guests["Pablo"].Add(guest, 0);
-        }
-
-        static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length)
-        {
-            if (length == 1) return list.Select(t => new T[] { t });
-
-            return GetPermutations(list, length - 1)
-                .SelectMany(t => list.Where(e => !t.Contains(e)),
-                    (t1, t2) => t1.Concat(new T[] { t2 }));
         }
     }
 }
