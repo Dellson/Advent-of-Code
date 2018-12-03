@@ -57,7 +57,7 @@ namespace Advent_of_Code_2018
                     }
                 }
             }
-            Console.WriteLine($"Puzzle one answer: {k}");
+            Console.WriteLine($"Puzzle two answer: {k}");
         }
     }
 }

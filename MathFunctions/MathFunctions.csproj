@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6C6D5956-B29C-450B-84C2-0C1CFD19FAEA}</ProjectGuid>
+    <ProjectGuid>{5AAD7FA4-8B75-4416-BED4-74818BD95B20}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Advent_of_Code_2015</RootNamespace>
-    <AssemblyName>Advent-of-Code-2015</AssemblyName>
+    <RootNamespace>MathFunctions</RootNamespace>
+    <AssemblyName>MathFunctions</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,38 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Day-01.cs" />
-    <Compile Include="Day-02.cs" />
-    <Compile Include="Day-03.cs" />
-    <Compile Include="Day-04.cs" />
-    <Compile Include="Day-05.cs" />
-    <Compile Include="Day-06.cs" />
-    <Compile Include="Day-07.cs" />
-    <Compile Include="Day-08.cs" />
-    <Compile Include="Day-09.cs" />
-    <Compile Include="Day-10.cs" />
-    <Compile Include="Day-11.cs" />
-    <Compile Include="Day-12.cs" />
-    <Compile Include="Day-13.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Day-01-input.txt" />
-    <Content Include="Day-02-input.txt" />
-    <Content Include="Day-03-input.txt" />
-    <Content Include="Day-04-input.txt" />
-    <Content Include="Day-05-input.txt" />
-    <Content Include="Day-06-input.txt" />
-    <Content Include="Day-07-input.txt" />
-    <Content Include="Day-08-input.txt" />
-    <Content Include="Day-09-input.txt" />
-    <Content Include="Day-12-input.txt" />
-    <Content Include="Day-13-input.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
