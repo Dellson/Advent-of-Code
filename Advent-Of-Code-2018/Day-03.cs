@@ -23,7 +23,7 @@ namespace Advent_of_Code_2018
             }
         }
 
-        public static void Challenge()
+        public static void Puzzle()
         {
             var array = new int[_fabrics.Max(f => f.Item1 + f.Item3), _fabrics.Max(f => f.Item2 + f.Item4)];
 
@@ -40,7 +40,7 @@ namespace Advent_of_Code_2018
                     }
                 }
             }
-            Console.WriteLine(counter);
+            Console.WriteLine($"Puzzle one answer: {counter}");
             
             int k = 0;
             bool hasFailed = true;
@@ -57,7 +57,7 @@ namespace Advent_of_Code_2018
                     }
                 }
             }
-            Console.WriteLine(k);
+            Console.WriteLine($"Puzzle one answer: {k}");
         }
     }
 }

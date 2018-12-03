@@ -14,19 +14,9 @@ namespace Advent_of_Code_2018
 
         static void Main(string[] args)
         {
-            //Day_01.BothStars();
-            //Day_02.BothStars();
-            //Day_03.BothStars();
-            //Day_04.BothStars();
-            //Day_05.BothStars();
-            //Day_06.BothStars();
-            //Day_07.BothStars();
-            //Day_08.BothStars();
-            //Day_09.BothStars();
-            //Day_10.ElvesLookElvesSay();
-            //Day_11.Challenge();
-            //Day_12.Challenge();
-            Day_01.Challenge();
+            //Day_01.Puzzle();
+            Day_02.Puzzle();
+            //Day_03.Puzzle();
             ReadKey();
         }
     }

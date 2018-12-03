@@ -1,86 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Advent_of_Code_2018
 {
     class Day_01
     {
-        private static string[] _input = System.IO.File.ReadAllLines(Program.InputFolderPath + "Day-01-input.txt");
-        private static long[] input;
+        private static int[] _input;
 
         static Day_01()
         {
-            input = new long[_input.Length];
+            string[] rawInput = System.IO.File.ReadAllLines(Program.InputFolderPath + "Day-01-input.txt");
+            _input = new int[rawInput.Length];
 
-            for (int i = 0; i < _input.Length; i++)
-            {
-                input[i] = Convert.ToInt64(Regex.Match(_input[i], @"-?\d+").Value);
-            }
+            for (int i = 0; i < rawInput.Length; i++)
+                _input[i] = Convert.ToInt32(Regex.Match(rawInput[i], @"-?\d+").Value);
         }
 
-        public static void Challenge()
+        public static void Puzzle()
         {
-            bool isFound = false;
-            long sum = 0;
-            var collection = new Dictionary<long, short>();
+            int sum = 0;
+            var collection = new HashSet<int>();
 
-            //for (int i = 0; i <20; i++)
-            while(!isFound)
+            for (int i = 0; ; i++)
             {
-                //foreach (var line in _input)
-                for (int j = 0; j < input.Length; j++)
+                for (int j = 0; j < _input.Length; j++)
                 {
-                    sum += input[j];
-                    if (collection.ContainsKey(sum))
+                    sum += _input[j];
+                    if (collection.Contains(sum))
                     {
-                        isFound = true;
-                        Console.WriteLine("TWICE " + sum);
+                        Console.WriteLine($"Puzzle two answer: {sum}");
                         return;
                     }
-                    else
-                    {
-                        collection.Add(sum, 0);
-                    }
-                    //Console.WriteLine(sum);
-
+                    collection.Add(sum);
                 }
-                //Console.WriteLine("DEBUG");
-                Console.WriteLine(sum);
-
-
-                
+                if (i == 0)
+                    Console.WriteLine($"Puzzle one answer: {sum}");
             }
-
-            /*for (int i = 0; i < collection.Count; i++)
-            {
-                for (int j = 0; j < collection.Count; j++)
-                {
-                    if (collection[i] == collection[j] && i != j)
-                        Console.WriteLine("RESULT " + collection[i]);
-                }
-            }
-
-            Console.WriteLine(sum);
-            Console.WriteLine("DEBUG");*/
         }
     }
 }
-
-/*int sum = 0;
-            var collection = new List<int>();
-
-            foreach (var line in _input)
-            {
-                sum += Convert.ToInt32(Regex.Match(line, @"-?\d+").Value);
-                if (collection.Contains(sum))
-                {
-                    Console.WriteLine(sum);
-                }
-                
-            }
-            Console.WriteLine(sum);
-*/
