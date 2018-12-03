@@ -15,8 +15,9 @@ namespace Advent_of_Code_2018
         static void Main(string[] args)
         {
             //Day_01.Puzzle();
-            Day_02.Puzzle();
+            //Day_02.Puzzle();
             //Day_03.Puzzle();
+            Day_04.Puzzle();
             ReadKey();
         }
     }
