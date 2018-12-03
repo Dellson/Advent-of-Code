@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -12,44 +13,57 @@ namespace Advent_of_Code_2015
 
         public static void Challenge()
         {
-            dynamic inputJson = JObject.Parse(_input);
-
-            string name = inputJson.Name;
-            string address = inputJson.Address.City;
-
-            StringBuilder sb = new StringBuilder();
             int sum = 0;
+            int charsSoFar = 0;
+            string[] splitted = _input.Split(new string[] { "red" }, StringSplitOptions.None);
+            List<string> intsToRemove = new List<string>();
 
-            for (int i = 0; i < _input.Length - 2; i++)
+            for (int i = 0; i < splitted.Length - 1; i++)
             {
-                if (_input[i] == '{')
+                int start = -1;
+                int end = -1;
+                string s1 = splitted[i];
+                string s2 = splitted[i + 1];
+                StringBuilder sb = new StringBuilder();
+
+                for (int j = s1.Length - 1; j >= 0; j--)
                 {
-                    i++;
-                    sum += RecursivelySum(ref i);
+                    if (s1[j] == '{')
+                    {
+                        start = j;
+                        break;
+                    }
                 }
+
+                int counter = 0;
+                for (int j = 0; j < s2.Length; j++)
+                {
+                    if (s2[j] == '{')
+                        counter++;
+                    if (s2[j] == '}')
+                        counter--;
+                    if (counter < 0)
+                    {
+                        end = j;
+                        break;
+                    }
+                }
+
+                var sub = _input.Substring(charsSoFar + start, splitted[i].Length - start + end + 4);
+                charsSoFar += splitted[i].Length;
+
+                if (splitted[i][splitted[i].Length - 2] == ',')
+                    continue;
+
+                var matches2 = Regex.Matches(sub, @"-?\d+");
+
+                foreach (var match in matches2)
+                    sum += Convert.ToInt32(match.ToString());
             }
-
-            /*var matches = Regex.Matches(_input, @"\d+");
-            var matches2 = Regex.Matches(_input, @"-?\d+");
-
-            int sum = 0;
-
-            foreach (var match in matches2)
-            {
-                sum += Convert.ToInt32(match.ToString());
-            }*/
-
-            //Console.WriteLine(sum);
-        }
-
-        private static int RecursivelySum(ref int i)
-        {
-            int sum = 0;
-            while (_input[i] != '}')
-            {
-                if ()
-            }
-            return 0;
+            Console.WriteLine(156366 - sum);
+            //Console.WriteLine(15 - sum);
+            // 91488 - too low
+            // 102840 - too high
         }
     }
 }
