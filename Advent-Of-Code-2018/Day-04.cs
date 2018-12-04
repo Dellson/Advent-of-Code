@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using static System.Console;
 
@@ -8,46 +9,50 @@ namespace Advent_of_Code_2018
     class Day_04
     {
         private static string[] _input = System.IO.File.ReadAllLines(Program.InputFolderPath + "Day-04-input.txt");
-        private List<Guard> guards = new List<Guard>();
+        private static Dictionary<int, List<int>> guards = new Dictionary<int, List<int>>();
 
         static Day_04()
         {
-            for (int i = 0; i < _input.Length; i++)
+            var sortedInput = _input.ToList();
+            sortedInput.Sort();
+
+            int currentId = 0;
+            int aslept = 0;
+            int timeAslept = 0;
+
+            foreach (var line in sortedInput)
             {
-                //var id = Convert.ToInt32(Regex.Matches(_input[i], @"\d+").Value);
+                if (line.Contains("Guard"))
+                {
+                    currentId = Convert.ToInt32(Regex.Match(line, @"#\d+").Value.Substring(1));
+
+                    if (!guards.ContainsKey(currentId))
+                        guards.Add(currentId, new List<int>());
+                    continue;
+                }
+                if (line.Contains("falls asleep"))
+                {
+                    aslept = Convert.ToInt32(line.Substring(15, 2));
+                }
+                if (line.Contains("wakes up"))
+                {
+                    var curTime = Convert.ToInt32(line.Substring(15, 2));
+                    var diff = curTime - aslept;
+                    guards[currentId].Add(diff);
+                }
             }
-
-
-            var myList = new List<Guard>();
-            for (int i = 0; i < _input.Length; i++)
-            {
-                // 1518-10-08 00:16
-                DateTime myDate = DateTime.ParseExact(_input[i].Substring(1,16), "yyyy-MM-dd HH:mm",
-                                       System.Globalization.CultureInfo.InvariantCulture);
-
-                Guard g = new Guard();
-                g.timestamp = myDate;
-                g.desc = _input[i].Substring(18);
-                myList.Add(g);
-                //Console.WriteLine("DEBUG");
-            }
-                //_input[i] = Convert.ToInt32(Regex.Match(rawInput[i], @"-?\d+").Value);
-
-
-            myList.Sort((x, y) => DateTime.Compare(x.timestamp, y.timestamp));
-
-            foreach (var line in myList)
-            {
-                Console.WriteLine(line.timestamp.ToString() + " " + line.desc);
-            }
+             
+            //return;
         }
 
         public static void Puzzle()
         {
-            //int sum = 0;
-            //var collection = new HashSet<int>();
-
-            WriteLine();
+            var max = guards.Values.Max(v => v.Sum());
+            WriteLine(max);
+            var key = guards.Where(g => g.Value.Sum() == max).First().Key;
+            WriteLine(key);
+            WriteLine(key * guards[key].Max());
+           
         }
 
         class Guard
