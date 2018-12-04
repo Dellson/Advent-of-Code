@@ -58,6 +58,7 @@
     <Compile Include="Day-11.cs" />
     <Compile Include="Day-12.cs" />
     <Compile Include="Day-13.cs" />
+    <Compile Include="Day-14.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -77,6 +78,7 @@
     <Content Include="Day-09-input.txt" />
     <Content Include="Day-12-input.txt" />
     <Content Include="Day-13-input.txt" />
+    <Content Include="Day-14-input.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Helpers\Helpers.csproj">
