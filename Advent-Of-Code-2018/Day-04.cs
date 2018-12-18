@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using static System.Console;
 
 namespace Advent_of_Code_2018
 {
@@ -51,43 +50,11 @@ namespace Advent_of_Code_2018
 
         public static void Puzzle()
         {
-            int minute = 0;
-            int repetitions = 0;
-            int max = 0;
-            int gu = 0;
-            
-            foreach (var guard in guards)
-            {
-                if (guard.Value.Values.Count == 0)
-                    continue;
-                int mostOftenMinuteCount = guard.Value.Values.Max();
-                int mostOftenMinute = guard.Value.Where(v => v.Value == mostOftenMinuteCount).First().Key;
-                Console.WriteLine("DEBUG " + mostOftenMinute);
-
-                if (mostOftenMinuteCount > repetitions)
-                {
-                    repetitions = mostOftenMinuteCount;
-                    minute = mostOftenMinute;
-                    gu = guard.Key;
-                }
-                    
-
-                /*minute = guard.Value.Where(v => v.Value == maxVal).First().Key;
-                if (minute > max)
-                {
-                    max = minute;
-                    gu = guard.Key;
-                }*/
-                    
-            }
-            Console.WriteLine(minute);
-            Console.WriteLine(gu);
-            Console.WriteLine(minute * gu);
-            // 4972 too low
-            
+            PuzzleOne();
+            PuzzleTwo();
         }
 
-        public static void Puzzle2()
+        private static void PuzzleOne()
         {
             int minute = 0;
             int max = 0;
@@ -95,7 +62,6 @@ namespace Advent_of_Code_2018
 
             foreach (var guard in guards)
             {
-                //Console.WriteLine(guard.Key);
                 int cur = 0;
 
                 foreach (var item in guard.Value)
@@ -110,7 +76,30 @@ namespace Advent_of_Code_2018
                     gu = guard.Key;
                 }
             }
-            Console.WriteLine(minute * gu);
+            Console.WriteLine("Puzzle one answer: " + minute * gu);
+        }
+
+        private static void PuzzleTwo()
+        {
+            int minute = 0;
+            int repetitions = 0;
+            int gu = 0;
+
+            foreach (var guard in guards)
+            {
+                if (guard.Value.Values.Count == 0)
+                    continue;
+                int mostOftenMinuteCount = guard.Value.Values.Max();
+                int mostOftenMinute = guard.Value.Where(v => v.Value == mostOftenMinuteCount).First().Key;
+
+                if (mostOftenMinuteCount > repetitions)
+                {
+                    repetitions = mostOftenMinuteCount;
+                    minute = mostOftenMinute;
+                    gu = guard.Key;
+                }
+            }
+            Console.WriteLine("Puzzle two answer: " + minute * gu);
         }
     }
 }
