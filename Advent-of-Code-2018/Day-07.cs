@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using static System.Console;
@@ -28,6 +29,34 @@ namespace Advent_of_Code_2018
 
         public static void Puzzle()
         {
+            List<string> result = PuzzleOne();
+            int time = 0;
+            List<int> workers = new List<int> { 0, 0 };
+
+            for (int i = 0; i < result.Count; i++)
+            {
+                var workerIndex = workers.FindIndex(w => w == 0);
+
+                if (workerIndex != -1)
+                    workers[workerIndex] = Convert.ToInt32(result[i][0]) - 64;
+                else
+                    i--;
+
+                time++;
+
+                for (int j = 0; j < workers.Count; j++)
+                {
+                    if (workers[j] != 0)
+                        workers[j]--;
+                }
+            }
+
+            WriteLine(time + workers.Max());
+        }
+        // , 0, 0, 0
+
+        private static List<string> PuzzleOne()
+        {
             List<string> result = new List<string>();
             int len = _steps.Count;
             var startSteps = _steps.Where(v => v.Value.Count == 0).OrderBy(e => e.Key);
@@ -37,8 +66,6 @@ namespace Advent_of_Code_2018
                 result.Add(step.Key);
                 _steps.Remove(step.Key);
             }
-
-            
 
             while (result.Count < len)
             {
@@ -52,15 +79,9 @@ namespace Advent_of_Code_2018
             foreach (var line in result)
                 Write(line);
 
-            /*foreach (var step in _steps)
-            {
-                WriteLine(step.Key);
-                foreach (var val in step.Value)
-                {
-                    Write(val + " ");
-                }
-                WriteLine("\n");
-            }*/
+            return result;
         }
     }
 }
+
+// A = 65
