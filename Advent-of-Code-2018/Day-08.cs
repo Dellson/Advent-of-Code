@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Advent_of_Code_2018
@@ -9,7 +7,6 @@ namespace Advent_of_Code_2018
     {
         private static string _rawInput = System.IO.File.ReadAllLines(Program.InputFolderPath + "Day-08-input.txt")[0];
         private static int[] _input;
-
 
         static Day_08()
         {
@@ -22,7 +19,7 @@ namespace Advent_of_Code_2018
 
         public static void Puzzle()
         {
-            //PuzzleOne();
+            PuzzleOne();
             PuzzleTwo();
         }
 
@@ -32,7 +29,7 @@ namespace Advent_of_Code_2018
             int metadataSum = 0;
 
             HandleNode();
-            Console.WriteLine(metadataSum);
+            Console.WriteLine("Puzzle one answer: " + metadataSum);
 
             void HandleNode()
             {
@@ -48,22 +45,20 @@ namespace Advent_of_Code_2018
 
         private static void PuzzleTwo()
         {
-            int position = 0;
-            int metadataSum = 0;
-            
-            Console.WriteLine(HandleNode());
+            int position = 0;            
+            Console.WriteLine("Puzzle two answer: " + HandleNode());
 
             int HandleNode()
             {
+                var metadataSum = 0;
                 var childrenCount = _input[position++];
                 var metadataEntriesCount = _input[position++];
-                var metadataVal = 0;
                 var childrenVals = new int[childrenCount];
 
                 if (childrenCount == 0)
                 {
                     for (int i = 0; i < metadataEntriesCount; i++)
-                        metadataVal += _input[position++];
+                        metadataSum += _input[position++];
                 }
                 else
                 {
@@ -72,11 +67,11 @@ namespace Advent_of_Code_2018
 
                     for (int i = 0; i < metadataEntriesCount; i++)
                     {
-                        if (_input[position++] < childrenCount)
+                        if (_input[position++] <= childrenCount)
                             metadataSum += childrenVals[_input[position - 1] - 1];
                     }
                 }
-                return metadataVal + metadataSum;
+                return metadataSum;
             }
         }
     }
