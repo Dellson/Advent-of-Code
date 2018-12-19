@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using static System.Console;
 
 namespace Advent_of_Code_2018
 {
@@ -10,64 +8,66 @@ namespace Advent_of_Code_2018
     {
         private static string _rawInput = System.IO.File.ReadAllLines(Program.InputFolderPath + "Day-05-input.txt")[0];
         private static char[] input;
-        static Stopwatch sw = new Stopwatch();
 
         static Day_05()
         {
             input = new char[_rawInput.Length];
 
             for (int i = 0; i < _rawInput.Length; i++)
-            {
                 input[i] = _rawInput[i];
-            }
-        }
-
-        public static int PuzzleOne()
-        {
-            int count = input.Length;
-            int nextcount = 0;
-
-            while (true)
-            {
-                nextcount = count;
-                count = input.Length;
-
-                for (int i = 0; i < input.Length - 1; i++)
-                {
-                    if (input[i] == '*')
-                    {
-                        count--;
-                        continue;
-                    }
-                        
-                    int j = 1;
-                    
-                    while ((i + j < input.Length - 1) && input[i + j] == '*')
-                        j++;                        
-
-                    if (Math.Abs(input[i] - input[i+j]) == 32)
-                    {
-                        input[i] = '*';
-                        input[i + j] = '*';
-                        count -= 2;
-                    }
-                }
-                if (nextcount == count)
-                    break;
-            }
-            WriteLine(count);
-            return count;
         }
 
         public static void Puzzle()
         {
-            sw.Start();
-            var l = new List<int>();
-            char[] inputArray = _rawInput.ToCharArray();
+            Console.WriteLine("Puzzle one answer: " + PuzzleOne());
+            PuzzleTwo();
+        }
+
+        private static int PuzzleOne()
+        {
+            int count = 0;
+            int nextcount = 0;
+
+            while (true)
+            {
+                count = input.Count(c => c != '*');
+
+                for (int i = 0; i < input.Length - 1; i++)
+                {
+                    if (input[i] == '*')
+                        continue;
+                    int j = 1;
+
+                    while ((i + j < input.Length) && input[i + j] == '*')
+                        j++;
+                    if (i + j >= input.Length)
+                        break;
+
+                    var x = input[i];
+                    var y = input[i+j];
+
+                    if (input[i] == input[i+j] + 32 || input[i] == input[i+j] - 32)
+                    {
+                        input[i] = '*';
+                        input[i+j] = '*';
+                    }
+                }
+                nextcount = input.Count(c => c != '*');
+
+                if (nextcount == count)
+                    break;
+            }
+            return input.Count(c => c != '*');
+        }
+
+        private static void PuzzleTwo()
+        {
+            var polymerVariants = new List<int>();
 
             for (int p = 65; p <= 90; p++)
             {
-                input = _rawInput.ToCharArray();
+                for (int i = 0; i < _rawInput.Length; i++)
+                    input[i] = _rawInput[i];
 
                 for (int i = 0; i < input.Length; i++)
                 {
@@ -75,11 +75,9 @@ namespace Advent_of_Code_2018
                         input[i] = '*';
                 }
 
-                l.Add(PuzzleOne());
+                polymerVariants.Add(PuzzleOne());
             }
-            WriteLine("result " + l.Min());
-            sw.Stop();
-            WriteLine(sw.Elapsed);
+            Console.WriteLine("Puzzle two answer: " + polymerVariants.Min());
         }
     }
 }
