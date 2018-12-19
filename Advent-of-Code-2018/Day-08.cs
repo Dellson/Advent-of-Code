@@ -22,7 +22,8 @@ namespace Advent_of_Code_2018
 
         public static void Puzzle()
         {
-            PuzzleOne();
+            //PuzzleOne();
+            PuzzleTwo();
         }
 
         private static void PuzzleOne()
@@ -33,7 +34,7 @@ namespace Advent_of_Code_2018
             HandleNode();
             Console.WriteLine(metadataSum);
 
-            int HandleNode()
+            void HandleNode()
             {
                 var childs = _input[position++];
                 var metadataEntries = _input[position++];
@@ -42,8 +43,40 @@ namespace Advent_of_Code_2018
                     HandleNode();
                 for (int i = 0; i < metadataEntries; i++)
                     metadataSum += _input[position++];
+            }
+        }
 
-                return 0;
+        private static void PuzzleTwo()
+        {
+            int position = 0;
+            int metadataSum = 0;
+            
+            Console.WriteLine(HandleNode());
+
+            int HandleNode()
+            {
+                var childrenCount = _input[position++];
+                var metadataEntriesCount = _input[position++];
+                var metadataVal = 0;
+                var childrenVals = new int[childrenCount];
+
+                if (childrenCount == 0)
+                {
+                    for (int i = 0; i < metadataEntriesCount; i++)
+                        metadataVal += _input[position++];
+                }
+                else
+                {
+                    for (int i = 0; i < childrenCount; i++)
+                        childrenVals[i] = HandleNode();
+
+                    for (int i = 0; i < metadataEntriesCount; i++)
+                    {
+                        if (_input[position++] < childrenCount)
+                            metadataSum += childrenVals[_input[position - 1] - 1];
+                    }
+                }
+                return metadataVal + metadataSum;
             }
         }
     }
