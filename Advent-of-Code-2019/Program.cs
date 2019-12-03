@@ -16,8 +16,8 @@ namespace Advent_of_Code_2019
         static void Main(string[] args)
         {
             //Day_01.Puzzle();
-            Day_02.Puzzle();
-            //Day_03.Puzzle();
+            //Day_02.Puzzle();
+            Day_03.Puzzle();
             //Day_04.Puzzle();
             //Day_05.Puzzle();
             //Day_07.Puzzle();
