@@ -8,40 +8,34 @@ namespace Advent_of_Code_2019
 {
     class Day_03
     {
-        static (int x, int y) currentPos = (0, 0);
-        static List<(int x, int y, int steps)> usedPositionsPipeline1 = new List<(int x, int y, int steps)>();
-        static List<(int x, int y, int steps)> usedPositionsPipeline2 = new List<(int x, int y, int steps)>();
-
-        static List<int> stepSums = new List<int>();
+        static Dictionary<(int x, int y), int> usedPositionsPipeline1 = new Dictionary<(int x, int y), int>();
+        static Dictionary<(int x, int y), int> usedPositionsPipeline2 = new Dictionary<(int x, int y), int>();
 
         public static void Puzzle()
         {
             var list = File.ReadAllLines(Program.InputFolderPath + "Day-03-input.txt");
 
             GeneratePipeline(list[0], usedPositionsPipeline1);
-            currentPos = (0,0);
             GeneratePipeline(list[1], usedPositionsPipeline2);
 
-            var CommonList = usedPositionsPipeline1.Intersect(usedPositionsPipeline2);
+            var intersections = usedPositionsPipeline1.Keys.Intersect(usedPositionsPipeline2.Keys);
 
-            //var flattened = CommonList.Select(d => Math.Abs(d.x) + Math.Abs(d.y)).ToList();
-            //Console.WriteLine(flattened.Min());
+            var puzzleOneAnswer = intersections
+                .Select(d => Math.Abs(d.x) + Math.Abs(d.y))
+                .Min();
+            var puzzleTwoAnswer = intersections
+                .Select(key => usedPositionsPipeline1[key] + usedPositionsPipeline2[key])
+                .Min();
 
-            foreach (var item in usedPositionsPipeline1)
-            {
-                if (usedPositionsPipeline2.Exists(element => item.x == element.x && item.y == element.y))
-                {
-                    stepSums.Add(item.steps + usedPositionsPipeline2.Find(element => item.x == element.x && item.y == element.y).steps);
-                }
-            }
-
-            Console.WriteLine(stepSums.Min());
+            Console.WriteLine(puzzleOneAnswer);
+            Console.WriteLine(puzzleTwoAnswer);
         }
 
-        static private void GeneratePipeline(string list, List<(int, int, int)> pipeline)
+        static private void GeneratePipeline(string list, Dictionary<(int x, int y), int> pipeline)
         {
             int number;
             int steps = 0;
+            (int x, int y) = (0, 0);
 
             foreach (Match element in Regex.Matches(list, @"(L|R|U|D)\d+"))
             {
@@ -50,16 +44,16 @@ namespace Advent_of_Code_2019
                 switch (element.Value[0])
                 {
                     case 'L':
-                        GenerateLine(-1, ref currentPos.x);
+                        GenerateLine(-1, ref x);
                         break;
                     case 'R':
-                        GenerateLine(1, ref currentPos.x);
+                        GenerateLine(1, ref x);
                         break;
                     case 'D':
-                        GenerateLine(-1, ref currentPos.y);
+                        GenerateLine(-1, ref y);
                         break;
                     case 'U':
-                        GenerateLine(1, ref currentPos.y);
+                        GenerateLine(1, ref y);
                         break;
                     default:
                         break;
@@ -72,7 +66,9 @@ namespace Advent_of_Code_2019
                 {
                     steps++;
                     position += sign;
-                    pipeline.Add((currentPos.x, currentPos.y, steps));
+                    
+                    if (!pipeline.ContainsKey((x, y)))
+                        pipeline.Add((x, y), steps);
                 }
             }
         }
