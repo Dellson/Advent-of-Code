@@ -27,8 +27,8 @@ namespace Advent_of_Code_2019
                 .Select(key => usedPositionsPipeline1[key] + usedPositionsPipeline2[key])
                 .Min();
 
-            Console.WriteLine(puzzleOneAnswer);
-            Console.WriteLine(puzzleTwoAnswer);
+            Console.WriteLine($"Puzzle one answer: {puzzleOneAnswer}");
+            Console.WriteLine($"Puzzle two answer: {puzzleTwoAnswer}");
         }
 
         static private void GeneratePipeline(string list, Dictionary<(int x, int y), int> pipeline)
