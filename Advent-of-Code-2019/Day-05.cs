@@ -8,7 +8,7 @@ namespace Advent_of_Code_2019
 {
     class Day_05
     {
-        static int input = 1;
+        static int input = 5;
         static List<int> outputs = new List<int>();
 
         public static void Puzzle()
@@ -34,13 +34,13 @@ namespace Advent_of_Code_2019
                 if (array[i] == 99)
                     break;
 
-                int increment = 4;
+                int increment = 0;
                 string code = array[i].ToString().PadLeft(4, '0');
                 int pointer = code.Length - 2;
                 string opcode = code.Substring(pointer);
                 int mode1 = Convert.ToInt32(code[--pointer].ToString());
                 int mode2 = Convert.ToInt32(code[--pointer].ToString());
-                
+
                 if (opcode == "01")
                 {
                     int firstVal = mode1 == 0 ? array[array[i + 1]] : array[i + 1];
@@ -52,8 +52,8 @@ namespace Advent_of_Code_2019
                 }
                 else if (opcode == "02")
                 {
-                    int firstVal = mode1 == 0 ? array[i + array[i + 1]] : array[i + 1];
-                    int secondVal = mode2 == 0 ? array[i + array[i + 2]] : array[i + 2];
+                    int firstVal = mode1 == 0 ? array[array[i + 1]] : array[i + 1];
+                    int secondVal = mode2 == 0 ? array[array[i + 2]] : array[i + 2];
 
                     array[array[i + 3]] = firstVal * secondVal;
 
@@ -70,6 +70,44 @@ namespace Advent_of_Code_2019
                     outputs.Add(array[array[i + 1]]);
 
                     increment = 2;
+                }
+                else if (opcode == "05")
+                {
+                    int firstVal = mode1 == 0 ? array[array[i + 1]] : array[i + 1];
+                    int secondVal = mode2 == 0 ? array[array[i + 2]] : array[i + 2];
+
+                    if (firstVal != 0)
+                        i = secondVal;
+                    else
+                        increment = 3;
+                }
+                else if (opcode == "06")
+                {
+                    int firstVal = mode1 == 0 ? array[array[i + 1]] : array[i + 1];
+                    int secondVal = mode2 == 0 ? array[array[i + 2]] : array[i + 2];
+
+                    if (firstVal == 0)
+                        i = secondVal;
+                    else
+                        increment = 3;
+                }
+                else if (opcode == "07")
+                {
+                    int firstVal = mode1 == 0 ? array[array[i + 1]] : array[i + 1];
+                    int secondVal = mode2 == 0 ? array[array[i + 2]] : array[i + 2];
+
+                    array[array[i + 3]] = (firstVal < secondVal) ? 1 : 0;
+
+                    increment = 4;
+                }
+                else if (opcode == "08")
+                {
+                    int firstVal = mode1 == 0 ? array[array[i + 1]] : array[i + 1];
+                    int secondVal = mode2 == 0 ? array[array[i + 2]] : array[i + 2];
+
+                    array[array[i + 3]] = (firstVal == secondVal) ? 1 : 0;
+
+                    increment = 4;
                 }
 
                 i += increment;
