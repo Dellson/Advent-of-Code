@@ -9,6 +9,7 @@ namespace Advent_of_Code_2019
     class Day_06
     {
         static Dictionary<string, List<string>> objectsDescendants = new Dictionary<string, List<string>>();
+        static Dictionary<string, List<string>> objectsFullDescendants = new Dictionary<string, List<string>>();
         private static int count = 0;
 
         public static void Puzzle()
@@ -28,31 +29,54 @@ namespace Advent_of_Code_2019
                 objectsDescendants[gravitationalPullSource].Add(orbitingObject);
             }
 
+            // part one
             foreach (var gravitationalPullSource in objectsDescendants)
-            {
-                FindAscendants(gravitationalPullSource.Value);
-            }
+                objectsFullDescendants.Add(gravitationalPullSource.Key, FindDescendants(gravitationalPullSource.Value));
 
-            Console.WriteLine(count);
+            Console.WriteLine($"Puzzle one answer: {count}");
 
-            //inputInstructions.CopyTo(copiedInstructions, 0);
-            //Console.WriteLine($"Puzzle one answer {IntcodeComputer.CalculateOutput(copiedInstructions, 1)}");
-
+            // part two
+            var r = FindFirstCommonAscendant("YOU", "SAN");
+            Console.WriteLine($"Puzzle two answer: {r}");
             //inputInstructions.CopyTo(copiedInstructions, 0);
             //Console.WriteLine($"Puzzle two answer {IntcodeComputer.CalculateOutput(copiedInstructions, 5)}");
         }
 
-        private static int FindAscendants(List<string> orbiters)
+        private static List<string> FindDescendants(List<string> orbiters)
         {
+            List<string> descendants = new List<string>();
+
             foreach (var orbiter in orbiters)
             {
                 count++;
+                descendants.Add(orbiter);
 
                 if (objectsDescendants.ContainsKey(orbiter))
-                    FindAscendants(objectsDescendants[orbiter]);
+                    descendants.AddRange(FindDescendants(objectsDescendants[orbiter]));
             }
 
-            return count;
+            return descendants;
+        }
+
+        private static int FindFirstCommonAscendant(string descendant1, string descendant2)
+        {
+            List<string> descendant1Ascendants = objectsFullDescendants
+                .Where(v => v.Value.Contains(descendant1))
+                .Select(w => w.Key).ToList();
+
+            List<string> descendant2Ascendants = objectsFullDescendants
+                .Where(v => v.Value.Contains(descendant2))
+                .Select(w => w.Key).ToList();
+
+            //int desc1count = descendant1Ascendants.Count;
+            //int desc2count = descendant2Ascendants.Count;
+
+            var commonNodes = descendant1Ascendants.Intersect(descendant2Ascendants);
+            var finalNode = commonNodes
+                .Where(node => objectsFullDescendants[node].Intersect(commonNodes).Count() == 0
+                && objectsFullDescendants[node].Intersect(commonNodes).Count() == 0);
+
+            return (descendant1Ascendants.Count - commonNodes.Count()) + (descendant2Ascendants.Count - commonNodes.Count());
         }
     }
 }
