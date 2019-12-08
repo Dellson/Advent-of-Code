@@ -18,12 +18,13 @@ namespace Advent_of_Code_2019
                 .ToArray();
 
             int[] copiedInstructions = new int[inputInstructions.Length];
+            IntcodeComputer ic = new IntcodeComputer();
             
             inputInstructions.CopyTo(copiedInstructions, 0);
-            Console.WriteLine($"Puzzle one answer {IntcodeComputer.CalculateOutput(copiedInstructions, 1)}");
+            Console.WriteLine($"Puzzle one answer {ic.CalculateOutput(copiedInstructions.ToList(), 1)}");
 
             inputInstructions.CopyTo(copiedInstructions, 0);
-            Console.WriteLine($"Puzzle two answer {IntcodeComputer.CalculateOutput(copiedInstructions, 5)}");
+            Console.WriteLine($"Puzzle two answer {ic.CalculateOutput(copiedInstructions.ToList(), 5)}");
         }
     }
 }

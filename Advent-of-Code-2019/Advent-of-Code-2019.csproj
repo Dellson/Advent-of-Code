@@ -65,5 +65,11 @@
     <Content Include="InputFiles\Day-02-input.txt" />
     <Content Include="InputFiles\Day-01-input.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Helpers\Helpers.csproj">
+      <Project>{5E84210C-4F4E-4B69-A519-14A8F6E11711}</Project>
+      <Name>Helpers</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

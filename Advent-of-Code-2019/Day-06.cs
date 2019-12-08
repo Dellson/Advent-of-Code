@@ -7,7 +7,7 @@ namespace Advent_of_Code_2019
 {
     class Day_06
     {
-        static Dictionary<string, List<string>> objectsHierarchy = new Dictionary<string, List<string>>();
+        //static Dictionary<string, List<string>> objectsHierarchy = new Dictionary<string, List<string>>();
         static Dictionary<string, List<string>> objectsFullDescendants = new Dictionary<string, List<string>>();
         private static int count = 0;
 
@@ -21,14 +21,11 @@ namespace Advent_of_Code_2019
                 (string ascendant, string descendant) = 
                     (orbitData.Split(')')[0], orbitData.Split(')')[1]);
 
-                if (!objectsHierarchy.ContainsKey(ascendant))
-                    objectsHierarchy.Add(ascendant, new List<string>());
+                if (!objectsFullDescendants.ContainsKey(ascendant))
+                    objectsFullDescendants.Add(ascendant, new List<string>());
 
-                objectsHierarchy[ascendant].Add(descendant);
+                objectsFullDescendants[ascendant].AddRange(FindDescendants(new List<string> { ascendant }));
             }
-
-            foreach (var descendant in objectsHierarchy)
-                objectsFullDescendants.Add(descendant.Key, FindDescendants(descendant.Value));
 
             Console.WriteLine($"Puzzle one answer: {count}");
             Console.WriteLine($"Puzzle two answer: {GetMinimumOrbitalTransfersForTwoObjects("YOU", "SAN")}");
@@ -43,8 +40,8 @@ namespace Advent_of_Code_2019
                 count++;
                 descendants.Add(orbiter);
 
-                if (objectsHierarchy.ContainsKey(orbiter))
-                    descendants.AddRange(FindDescendants(objectsHierarchy[orbiter]));
+                if (objectsFullDescendants.ContainsKey(orbiter))
+                    descendants.AddRange(FindDescendants(objectsFullDescendants[orbiter]));
             }
 
             return descendants;
