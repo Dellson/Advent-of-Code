@@ -31,8 +31,6 @@ namespace Advent_of_Code_2019
             
         public static void Puzzle()
         {
-            
-
             var combinations = GetPermutations(new int[] { 0, 1, 2, 3, 4 }, 5);
             //IntcodeComputer ic = new IntcodeComputer();
             //inputsArraysAndCorrespondingOutputs.Add((new int[] { 0, 1, 2, 3, 4 }, GetOutputForGivenInputValuesSet(ic, ref inputInstructions, new int[] { 0, 1, 2, 3, 4 })));
@@ -43,57 +41,41 @@ namespace Advent_of_Code_2019
                 //int[] instructionsCopy = new int[inputInstructions.Length];
                 //Array.Copy(inputInstructions, instructionsCopy, inputInstructions.Length);
                 var inputReference = inputInstructions.ToList();
+                //IEnumerable<int> innerArray = new List<int> { 4, 3, 2, 1, 0 };
 
                 inputsArraysAndCorrespondingOutputs.Add(
                     (inputArray.ToArray(), 
-                    GetOutputForGivenInputValuesSet(new IntcodeComputer(), inputReference, inputArray.ToArray())));
-
+                    GetOutputForGivenInputPhasesSet(new IntcodeComputer(), inputReference, inputArray.ToArray())));
             }
-
-
-            //var amplifierOutputs = GetOutputForGivenInputValuesSet(ic, instructionsCopy, iputValues).ToList();
-            //var maxOutput = amplifierOutputs.Max(ao => ao.Item2);
-            //int maxResultsIndex = amplifierOutputs.Where(
-            //    ao => ao.Item2 == maxOutput).sele
-
-            //currentResults.Add(maxOutput);
-            //}
-
-            //var maxval =  .Max(a => a.Item2);
-            //inputsArraysAndCorrespondingOutputs.First(a => a.Item2 == maxval).Item1.ToList().ForEach(i => Console.Write(i));
 
             var result = inputsArraysAndCorrespondingOutputs.Max(iaco => iaco.Item2);
 
-    Console.WriteLine();
+            Console.WriteLine(result);
 
-            //int amplifierMaxValue = currentResults.Max();
-
-            //for (int i = 0; i < currentResults.Count; i++)
-            //{
-            //    Console.Write(currentResults[i] + " ");
             //}
         }
 
-        //private static int VVVV => return;
-
-        private static int GetOutputForGivenInputValuesSet(IntcodeComputer ic, List<int> inputInstructionsCopy, int[] iputValues)
+        private static int GetOutputForGivenInputPhasesSet(IntcodeComputer ic, List<int> inputInstructionsCopy, int[] _phaseValues)
         {
+            var phaseValues = _phaseValues.ToList();
             List<int> amplifierOutputs = new List<int>();
             var currentInstruction = new List<int>(inputInstructionsCopy);
-            var data = ic.CalculateOutput(currentInstruction, 0);
-            foreach (int input in iputValues)
+            var input = ic.CalculateOutput(ref currentInstruction, 0, phaseValues[0]);
+            phaseValues.RemoveAt(0);
+
+            foreach (int phaseValue in phaseValues)
             {
-                ic.CalculateOutput(currentInstruction, input);
-                data = ic.CalculateOutput(currentInstruction, data);
-                amplifierOutputs.Add(data);
+                ic = new IntcodeComputer();
+                input = ic.CalculateOutput(ref currentInstruction, input, phaseValue);
+                amplifierOutputs.Add(input);
                 currentInstruction = ic.inputData;
             }
 
-            if (iputValues[0] == 4 &&
-                iputValues[1] == 3 &&
-                iputValues[2] == 2 &&
-                iputValues[3] == 4 &&
-                iputValues[4] == 3)
+            if (phaseValues[0] == 4 &&
+                phaseValues[1] == 3 &&
+                phaseValues[2] == 2 &&
+                phaseValues[3] == 4 &&
+                phaseValues[4] == 3)
             {
                 Console.WriteLine();
             }

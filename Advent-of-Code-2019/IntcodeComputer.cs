@@ -6,11 +6,13 @@ namespace Advent_of_Code_2019
 {
     public class IntcodeComputer
     {
-        private List<int> outputs;
         public List<int> inputData { get; private set; }
+        private List<int> outputs;
 
-        public int CalculateOutput(List<int> list, int input)
+
+        public int CalculateOutput(ref List<int> list, int input, int phase = -1)
         {
+            int numberOfArgumentsProvidedSoFar = 0;
             inputData = list;
             outputs = new List<int>();
 
@@ -25,8 +27,12 @@ namespace Advent_of_Code_2019
 
                 if (opcode == "03")
                 {
-                    list[list[i + 1]] = input;
+                    if (numberOfArgumentsProvidedSoFar == 0)
+                        list[list[i + 1]] = phase;
+                    if (numberOfArgumentsProvidedSoFar == 1 && phase != -1)
+                        list[list[i + 1]] = input;
 
+                    numberOfArgumentsProvidedSoFar++;
                     i += 2;
                 }
                 else if (opcode == "04")
@@ -77,17 +83,6 @@ namespace Advent_of_Code_2019
             }
 
             return outputs.Last();
-        }
-
-        //public int CalculateOutput(List<int> array, int input)
-        //{
-        //    var inputArray = array.ToArray();
-        //    return CalculateOutput(ref inputArray, input);
-        //}
-
-        internal int CalculateOutput(List<int> list, List<int> x, int input)
-        {
-            throw new NotImplementedException();
         }
     }
 }

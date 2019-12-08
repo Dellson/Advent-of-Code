@@ -7,7 +7,7 @@ namespace Advent_of_Code_2019
 {
     class Day_08
     {
-        private static List<string> oneDimLayers = new List<string>();
+        private static List<string> layers = new List<string>();
         const int maxWidth = 25;
         const int maxHeight = 6;
 
@@ -16,19 +16,19 @@ namespace Advent_of_Code_2019
             string inputData = File.ReadAllLines(Program.InputFolderPath + "Day-08-input.txt")[0];
 
             for (int i = 0; i < inputData.Length; i += maxHeight * maxWidth)
-                oneDimLayers.Add(inputData.Substring(i, maxHeight * maxWidth));
+                layers.Add(inputData.Substring(i, maxHeight * maxWidth));
         }
 
         public static void Puzzle()
         {
             Func<string, char, int> digitCounter = (layer, target) => layer.Count(c => c == target);            
-            int maxval = oneDimLayers.Min(layer => digitCounter(layer, '0'));
-            string matchingLayer = oneDimLayers.Find(layer => digitCounter(layer, '0') == maxval);
+            int maxval = layers.Min(layer => digitCounter(layer, '0'));
+            string matchingLayer = layers.Find(layer => digitCounter(layer, '0') == maxval);
 
             Console.WriteLine($"Puzzle one answer: {digitCounter(matchingLayer, '1') * digitCounter(matchingLayer, '2')}");
             Console.WriteLine($"\nPuzzle two answer:");
             
-            string image = FlattenMessage(oneDimLayers);
+            string image = FlattenCurrentLayers();
 
             for (int i = 0; i < image.Length; i++)
             {
@@ -39,7 +39,7 @@ namespace Advent_of_Code_2019
             }
         }
 
-        private static string FlattenMessage(List<string> layers)
+        private static string FlattenCurrentLayers()
         {
             char[] destLayer = layers[0].ToCharArray();
 

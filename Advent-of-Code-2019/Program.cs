@@ -21,8 +21,8 @@ namespace Advent_of_Code_2019
             //Day_04.Puzzle();
             //Day_05.Puzzle();
             //Day_06.Puzzle();
-            //Day_07.Puzzle();
-            Day_08.Puzzle();
+            Day_07.Puzzle();
+            //Day_08.Puzzle();
             ReadKey();
         }
     }
