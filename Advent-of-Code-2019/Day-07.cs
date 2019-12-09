@@ -1,5 +1,4 @@
-﻿using Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,27 +31,30 @@ namespace Advent_of_Code_2019
         public static void Puzzle()
         {
             var combinations = GetPermutations(new int[] { 0, 1, 2, 3, 4 }, 5);
+            var combinationsForFeedbackLoop = GetPermutations(new int[] { 5, 6, 7, 8, 9 }, 5);
             //IntcodeComputer ic = new IntcodeComputer();
             //inputsArraysAndCorrespondingOutputs.Add((new int[] { 0, 1, 2, 3, 4 }, GetOutputForGivenInputValuesSet(ic, ref inputInstructions, new int[] { 0, 1, 2, 3, 4 })));
             //inputsArraysAndCorrespondingOutputs.Add((new int[] { 0, 4, 4, 3, 4 }, GetOutputForGivenInputValuesSet(ic, ref inputInstructions, new int[] { 0, 4, 4, 3, 4 })));
 
             foreach (var inputArray in combinations)
             {
-                //int[] instructionsCopy = new int[inputInstructions.Length];
-                //Array.Copy(inputInstructions, instructionsCopy, inputInstructions.Length);
                 var inputReference = inputInstructions.ToList();
-                //IEnumerable<int> innerArray = new List<int> { 4, 3, 2, 1, 0 };
+                foreach (var feedbackLoopinputArray in combinationsForFeedbackLoop)
+                {
 
-                inputsArraysAndCorrespondingOutputs.Add(
-                    (inputArray.ToArray(), 
-                    GetOutputForGivenInputPhasesSet(new IntcodeComputer(), inputReference, inputArray.ToArray())));
+                    //inputsArraysAndCorrespondingOutputs.Add(
+                    //inputArray.ToArray(),
+                    GetOutputForGivenInputPhasesSet(new IntcodeComputer(), inputReference, inputArray.ToArray());//)));
+
+                    inputsArraysAndCorrespondingOutputs.Add(
+                    (feedbackLoopinputArray.ToArray(),
+                    GetOutputForGivenInputPhasesSet(new IntcodeComputer(), inputReference, feedbackLoopinputArray.ToArray())));
+                }
             }
 
             var result = inputsArraysAndCorrespondingOutputs.Max(iaco => iaco.Item2);
 
             Console.WriteLine(result);
-
-            //}
         }
 
         private static int GetOutputForGivenInputPhasesSet(IntcodeComputer ic, List<int> inputInstructionsCopy, int[] _phaseValues)
@@ -70,16 +72,6 @@ namespace Advent_of_Code_2019
                 amplifierOutputs.Add(input);
                 currentInstruction = ic.inputData;
             }
-
-            if (phaseValues[0] == 4 &&
-                phaseValues[1] == 3 &&
-                phaseValues[2] == 2 &&
-                phaseValues[3] == 4 &&
-                phaseValues[4] == 3)
-            {
-                Console.WriteLine();
-            }
-
 
             return amplifierOutputs.Last();
         }
