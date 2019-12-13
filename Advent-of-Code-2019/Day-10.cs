@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static System.Math;
 
 namespace Advent_of_Code_2019
 {
     class Day_10
     {
-        private static List<(int x, int y, List<(int x, int y)> visibleAsteroidsNormalizedCoordinates)> stationCandidates = new List<(int, int, List<(int, int)>)>();
+        private static List<(int x, int y, List<(int x, int y, int nx, int ny)> monitoredAsteroidsCoords)> stationCandidates = 
+            new List<(int, int, List<(int, int, int, int)>)>();
 
         static Day_10()
         {
@@ -18,62 +20,39 @@ namespace Advent_of_Code_2019
                 for (int y = 0; y < inputData.Length; y++)
                 {
                     if (inputData[x][y] == '#')
-                        stationCandidates.Add((x, y, new List<(int, int)>()));
+                        stationCandidates.Add((x, y, new List<(int, int, int, int)>()));
                 }
             }
-
-            Puzzle();
-            var bestCandidate = stationCandidates.Max(candidate => candidate.visibleAsteroidsNormalizedCoordinates.Count);
-
-            Console.WriteLine($"coord: {bestCandidate}");
-
-            //foreach (var candidate in stationCandidates)
-            //    Console.WriteLine($"({candidate.x}, {candidate.y}) = {candidate.visibleAsteroidsNormalizedCoordinates.Count}");
-
-            //foreach (var asteroid in stationCandidates.Find(c => c.visibleAsteroidsNormalizedCoordinates.Count == bestCandidate).visibleAsteroidsNormalizedCoordinates)
-            //    Console.WriteLine($"({asteroid.x}, {asteroid.y})");
-
-            //foreach (var candidate in stationCandidates)
-            //{
-            //    Console.WriteLine($"\nx = {candidate.x}, y = {candidate.y}");
-            //}
         }
 
-        public static string Puzzle()
+        public static void Puzzle()
         {
             foreach (var candidate in stationCandidates)
             {
                 foreach (var asteroid in stationCandidates)
                 {
-                    //(int x, int y) normalizedCoords = NormalizeCoordinates(3,7);
                     (int x, int y) normalizedCoords = NormalizeCoordinates(asteroid.x - candidate.x, asteroid.y - candidate.y);
                     
-                    if (!candidate.visibleAsteroidsNormalizedCoordinates.Exists(c => c.x == normalizedCoords.x && c.y == normalizedCoords.y))
-                        candidate.visibleAsteroidsNormalizedCoordinates.Add(normalizedCoords);
+                    if (!candidate.monitoredAsteroidsCoords.Exists(c => c.nx == normalizedCoords.x && c.ny == normalizedCoords.y))
+                        candidate.monitoredAsteroidsCoords.Add((asteroid.x, asteroid.y, normalizedCoords.x, normalizedCoords.y));
                 }
             }
 
-            return string.Empty;
+            Console.WriteLine($"Puzzle one answer: {stationCandidates.Max(candidate => candidate.monitoredAsteroidsCoords.Count) - 1}");
         }
 
         private static (int x, int y) NormalizeCoordinates(int x, int y)
         {
-            //if (x == 1 && y == 2)
-            //    Console.WriteLine("x == 1, y == 2");
-            int xcopy = x;// Math.Abs(x);
-            int ycopy = y;// Math.Abs(y);
+            if (x == 0 || y == 0)
+            {
+                return (
+                    x == 0 ? 0 : Sign(x),
+                    y == 0 ? 0 : Sign(y));
 
-            if (x == 0 && y == 0)
-                return (0, 0);
-            else if (x == 0 && y != 0)
-                return (0, Math.Sign(y));
-            else if (x != 0 && y == 0)
-                return (Math.Sign(x), 0);
+            }
 
-            if (xcopy < 0)
-                xcopy = -xcopy;
-            if (ycopy < 0)
-                ycopy = -ycopy;
+            int xcopy = x * Sign(x);
+            int ycopy = y * Sign(y);
 
             while (xcopy != 0 && ycopy != 0)
             {
@@ -83,10 +62,9 @@ namespace Advent_of_Code_2019
                     ycopy %= xcopy;
             }
 
-            if (xcopy == 0)
-                return (x / ycopy, y / ycopy);
-            else
-                return (x / xcopy, y / xcopy);
+            return (xcopy == 0 ?
+                (x / ycopy, y / ycopy) :
+                (x / xcopy, y / xcopy));
         }
     }
 }
