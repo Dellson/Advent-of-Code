@@ -23,7 +23,8 @@ namespace Advent_of_Code_2019
             //Day_06.Puzzle();
             //Day_07.Puzzle();
             //Day_08.Puzzle();
-            Day_10.Puzzle();
+            //Day_10.Puzzle();
+            Day_14.Puzzle();
             ReadKey();
         }
     }
