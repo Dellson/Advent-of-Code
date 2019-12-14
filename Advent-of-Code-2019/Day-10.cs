@@ -37,8 +37,11 @@ namespace Advent_of_Code_2019
             int maxVisibleAsteroids = stationCandidates.Max(candidate => candidate.monitoredCoords.Count);
             var bestCandidate = stationCandidates.Find(c => c.monitoredCoords.Count == maxVisibleAsteroids);
 
-            Console.WriteLine($"Puzzle one answer: {bestCandidate.monitoredCoords.Sum(bc => bc.x + bc.y)}");
+            //Console.WriteLine($"Puzzle one answer: {bestCandidate.monitoredCoords.Sum(bc => bc.x + bc.y)}");
             Console.WriteLine($"Puzzle one answer: {maxVisibleAsteroids - 1}");
+
+            bestCandidate.SetMonitoredAsteroidsOrderToClockwise();
+            //var startingPoint = bestCandidate.monitoredCoords.Where
 
         }
 
@@ -108,6 +111,27 @@ namespace Advent_of_Code_2019
                 this.ry = ry;
                 this.nx = nx;
                 this.ny = ny;
+            }
+
+            public void SetMonitoredAsteroidsOrderToClockwise()
+            {
+                if (monitoredCoords.Exists(a => a.nx >= 0 && a.ny >= 0))
+                {
+                    var firstQuarter = new List<Asteroid>(monitoredCoords
+                        .Where(a => (a.nx >= 0 && a.ny >= 0)));
+                    var secondQuarter = new List<Asteroid>(monitoredCoords
+                        .Where(a => (a.nx >= 0 && a.ny < 0)));
+                    var thirdQuarter = new List<Asteroid>(monitoredCoords
+                        .Where(a => (a.nx < 0 && a.ny < 0)));
+                    var fourthQuarter = new List<Asteroid>(monitoredCoords
+                        .Where(a => (a.nx < 0 && a.ny >= 0)));
+
+                    if (thirdQuarter.Count == monitoredCoords.Count)
+                    {
+
+                    }
+                }
+
             }
         }
     }
