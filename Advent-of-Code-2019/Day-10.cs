@@ -8,8 +8,7 @@ namespace Advent_of_Code_2019
 {
     class Day_10
     {
-        private static List<(int x, int y, List<(int x, int y, int nx, int ny)> monitoredAsteroidsCoords)> stationCandidates = 
-            new List<(int, int, List<(int, int, int, int)>)>();
+        private static List<Asteroid> stationCandidates = new List<Asteroid>();
 
         static Day_10()
         {
@@ -20,25 +19,27 @@ namespace Advent_of_Code_2019
                 for (int y = 0; y < inputData.Length; y++)
                 {
                     if (inputData[x][y] == '#')
-                        stationCandidates.Add((x, y, new List<(int, int, int, int)>()));
+                        stationCandidates.Add(new Asteroid(x, y, 0, 0, 0, 0));
                 }
             }
         }
 
         public static void Puzzle()
         {
-            foreach (var candidate in stationCandidates)
+            foreach (Asteroid candidate in stationCandidates)
             {
-                foreach (var asteroid in stationCandidates)
+                foreach (Asteroid asteroid in stationCandidates)
                 {
-                    (int x, int y) normalizedCoords = NormalizeCoordinates(asteroid.x - candidate.x, asteroid.y - candidate.y);
-                    
-                    if (!candidate.monitoredAsteroidsCoords.Exists(c => c.nx == normalizedCoords.x && c.ny == normalizedCoords.y))
-                        candidate.monitoredAsteroidsCoords.Add((asteroid.x, asteroid.y, normalizedCoords.x, normalizedCoords.y));
+                    FindNearestAsteroidsUsingNormalizedCoordinates(candidate, asteroid);
                 }
             }
 
-            Console.WriteLine($"Puzzle one answer: {stationCandidates.Max(candidate => candidate.monitoredAsteroidsCoords.Count) - 1}");
+            int maxVisibleAsteroids = stationCandidates.Max(candidate => candidate.monitoredCoords.Count);
+            var bestCandidate = stationCandidates.Find(c => c.monitoredCoords.Count == maxVisibleAsteroids);
+
+            Console.WriteLine($"Puzzle one answer: {bestCandidate.monitoredCoords.Sum(bc => bc.x + bc.y)}");
+            Console.WriteLine($"Puzzle one answer: {maxVisibleAsteroids - 1}");
+
         }
 
         private static (int x, int y) NormalizeCoordinates(int x, int y)
@@ -65,6 +66,49 @@ namespace Advent_of_Code_2019
             return (xcopy == 0 ?
                 (x / ycopy, y / ycopy) :
                 (x / xcopy, y / xcopy));
+        }
+
+        private static void FindNearestAsteroidsUsingNormalizedCoordinates(Asteroid candidate, Asteroid asteroid)
+        {
+            (int x, int y) nCoords = NormalizeCoordinates(asteroid.x - candidate.x, asteroid.y - candidate.y);
+            asteroid.nx = nCoords.x;
+            asteroid.ny = nCoords.y;
+            Predicate<Asteroid> predicate = (a => a.nx == nCoords.x && a.ny == nCoords.y);
+
+            if (!candidate.monitoredCoords.Exists(predicate))
+                candidate.monitoredCoords.Add(new Asteroid(asteroid.x, asteroid.y, asteroid.x - candidate.x, asteroid.y - candidate.y, asteroid.nx, asteroid.ny));
+            else if (Abs(asteroid.rx) < Abs(candidate.monitoredCoords.Find(a => a.nx == asteroid.nx && a.ny == asteroid.ny).rx)
+                && Abs(asteroid.ry) < Abs(candidate.monitoredCoords.Find(a => a.nx == asteroid.nx && a.ny == asteroid.ny).ry))
+            {
+                Asteroid asteroidToReplace = candidate.monitoredCoords.Find(predicate);
+                asteroidToReplace.x = asteroid.x;
+                asteroidToReplace.y = asteroid.y;
+            }
+        }
+
+        /// <summary>
+        /// Model of an asteroid
+        /// </summary>
+        private class Asteroid
+        {
+            public int x { get; set; }
+            public int y { get; set; }
+            public int rx { get; set; }
+            public int ry { get; set; }
+
+            public int nx { get; set; }
+            public int ny { get; set; }
+            public List<Asteroid> monitoredCoords = new List<Asteroid>();
+
+            public Asteroid(int x, int y, int rx, int ry, int nx, int ny)
+            {
+                this.x = x; 
+                this.y = y;
+                this.rx = rx;
+                this.ry = ry;
+                this.nx = nx;
+                this.ny = ny;
+            }
         }
     }
 }
