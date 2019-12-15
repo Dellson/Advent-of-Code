@@ -9,11 +9,8 @@ namespace Advent_of_Code_2019
 {
     class Day_14
     {
-        private static Dictionary<string, (int outputQuantity, List<(string input, int inputQuantity)>)> reactions = 
-            new Dictionary<string, (int, List<(string, int)>)>();
-        private static Dictionary<string, (int amount, int ore)> chemicalsStash = new Dictionary<string, (int, int)>();
-
-        private static int oreused = 0;
+        private static Dictionary<string, Formulae> formulaes = new Dictionary<string, Formulae>();
+        private static Dictionary<string, int> reagentNeeded = new Dictionary<string, int>();
 
         static Day_14()
         {
@@ -23,95 +20,70 @@ namespace Advent_of_Code_2019
             {
                 MatchCollection inputsGeneral = Regex.Matches(inputData[i], @"\d+ \w+(?=\s{1}|,)");
                 string outputKey = Regex.Match(inputData[i], @"(?<=\=\>\s{1}\d+ )\w+").Value;
-                int outputValue = Convert.ToInt32(Regex.Match(inputData[i], @"(?<=\=\>\s{1})\d+").Value);
-                var list = new List<(string, int)>();
+                int outputQuantity = Convert.ToInt32(Regex.Match(inputData[i], @"(?<=\=\>\s{1})\d+").Value);
+                List<(string, int)> ingredients = new List<(string, int)>();
 
                 for (int j = 0; j < inputsGeneral.Count; j++)
                 {
-                    (string input, int inputQuantity) value = (
-                        inputsGeneral[j].Value.Split(' ')[1],
+                    var value = (inputsGeneral[j].Value.Split(' ')[1],
                         Convert.ToInt32(inputsGeneral[j].Value.Split(' ')[0]));
 
-                    list.Add(value);
+                    ingredients.Add(value);
                 }
 
-                reactions.Add(outputKey, (outputValue, list));
+                formulaes.Add(outputKey, new Formulae(ingredients, outputKey, outputQuantity));
             }
         }
 
         public static int Puzzle()
         {
-            foreach (var reagent in reactions)
-                chemicalsStash.Add(reagent.Key, (0, 0));
-            //chemicalsStash.Add("ORE", 0);
+            int totalCount = 0;
 
-            Console.WriteLine(CountOreRequiredForReaction(reactions["FUEL"], reactions["FUEL"].outputQuantity, "FUEL"));
-            //Console.WriteLine(oreused + chemicalsStash["ORE"]);
-            //Console.WriteLine(oreused);
-            Console.WriteLine(oreused);
+            foreach (var formulae in formulaes)
+                reagentNeeded.Add(formulae.Key, 0);
+
+            ExecuteFormulae(formulaes["FUEL"], 1);
+
+            foreach (var reagent in new Dictionary<string, int>(reagentNeeded))
+            {
+                while (reagentNeeded[reagent.Key] > 0)
+                {
+                    var currentFormulae = formulaes[reagent.Key];
+                    int x = currentFormulae.InputMinerals.Where(m => m.name == "ORE").First().quantity;
+                    reagentNeeded[reagent.Key] -= currentFormulae.OutputQuantity;
+                    totalCount += x;
+                }
+            }
+
+            return totalCount;
+        }
+
+        private static int ExecuteFormulae(Formulae formulae, int outputTargetQuantity)
+        {
+            foreach (var (inputName, inputQuantity) in formulae.InputMinerals)
+            {
+                if (formulaes[inputName].InputMinerals.Exists(m => m.name == "ORE"))
+                    reagentNeeded[inputName] += (inputQuantity * outputTargetQuantity);
+
+                else
+                    ExecuteFormulae(formulaes[inputName], inputQuantity);
+            }
+
             return 0;
         }
 
-        // requiredOutputCount: np. potrzeba 7 A
-        // quantity - rekacja produkuje 10 A
-        // targetCount - reakcja potrzebuje 10 ORE
-        // ? - ile ore nam zostanie
-        // ? - ile ore naprawdę potrzebujemy
-        private static int CountOreRequiredForReaction((int quantity, List<(string name, int targetCount)>) inputReagents, int requiredOutputCount, string parent)
+        private class Formulae
         {
-            foreach (var reagent in inputReagents.Item2)
-            {                
-                if (reagent.name == "B")
-                    Console.Write("");
+            public List<(string name, int quantity)> InputMinerals;
+            public readonly string OutputMineral;
+            public readonly int OutputQuantity;
 
-                if (reagent.name == "ORE")
-                {
-                    while (chemicalsStash[parent].ore < requiredOutputCount)
-                    {
-                        chemicalsStash[parent] = 
-                            (chemicalsStash[parent].amount + reactions[parent].outputQuantity, 
-                            chemicalsStash[parent].ore + reagent.targetCount);
-
-                        oreused += reagent.targetCount;
-                    }
-
-                    chemicalsStash[parent] = 
-                        (chemicalsStash[parent].amount, 
-                        chemicalsStash[parent].ore - requiredOutputCount);
-
-
-                    //chemicalsStash[reagent.name] -= requiredOutputCount;
-                }
-                //else if (reagent.name == "A")
-                //{
-                //    while (chemicalsStash[reagent.name] < reagent.targetCount)
-                //    {
-                //        chemicalsStash[reagent.name] += 10;
-                //        CountOreRequiredForReaction(reactions[reagent.name].Item2, reactions[reagent.name].outputQuantity, reagent.name);
-                //    }
-
-                //    chemicalsStash[reagent.name] -= reagent.targetCount;
-                //}
-                else
-                {
-                    var pr = reactions[parent];
-
-                    while (chemicalsStash[reagent.name].ore < reagent.targetCount)
-                    {
-                        CountOreRequiredForReaction(reactions[reagent.name], reagent.targetCount, reagent.name);
-
-                        
-                    }
-
-                    chemicalsStash[reagent.name] =
-                        (chemicalsStash[reagent.name].amount - reagent.targetCount,
-                        chemicalsStash[parent].ore);
-                }
-
+            public Formulae(List<(string, int)> im, string om, int oq)
+            {
+                InputMinerals = im;
+                OutputMineral = om;
+                OutputQuantity = oq;
             }
-
-            return reactions[parent].outputQuantity;
         }
-    
     }
 }
