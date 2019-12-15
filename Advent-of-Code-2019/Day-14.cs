@@ -10,6 +10,7 @@ namespace Advent_of_Code_2019
     class Day_14
     {
         private static Dictionary<string, Formulae> formulaes = new Dictionary<string, Formulae>();
+        //private static Dictionary<string, int> reagentNeeded = new Dictionary<string, int>();
         private static Dictionary<string, int> reagentNeeded = new Dictionary<string, int>();
 
         static Day_14()
@@ -42,20 +43,61 @@ namespace Advent_of_Code_2019
             foreach (var formulae in formulaes)
                 reagentNeeded.Add(formulae.Key, 0);
 
-            ExecuteFormulae(formulaes["FUEL"], 1);
+            //ExecuteFormulae(formulaes["FUEL"], 1);
+            CountUsage(formulaes["FUEL"], 1);
+            //ExecuteReactions(formulaes["FUEL"], 1);
 
             foreach (var reagent in new Dictionary<string, int>(reagentNeeded))
             {
+                var currentFormulae = formulaes[reagent.Key];
+
+                if (currentFormulae.InputMinerals[0].name != "ORE")
+                    continue;
+
                 while (reagentNeeded[reagent.Key] > 0)
                 {
-                    var currentFormulae = formulaes[reagent.Key];
-                    int x = currentFormulae.InputMinerals.Where(m => m.name == "ORE").First().quantity;
+                    //int x = currentFormulae.InputMinerals[0].quantity;
                     reagentNeeded[reagent.Key] -= currentFormulae.OutputQuantity;
-                    totalCount += x;
+                    totalCount += currentFormulae.InputMinerals[0].quantity;
                 }
             }
 
+            Console.WriteLine(totalCount);
+
             return totalCount;
+        }
+
+        private static int CountUsage(Formulae formulae, int multiplier)
+        {
+            foreach (var (inputName, inputQuantity) in formulae.InputMinerals)
+            {
+                if (inputName == "ORE")
+                    continue;
+
+                reagentNeeded[inputName] += (multiplier * inputQuantity);
+
+                CountUsage(formulaes[inputName], (multiplier * (int)Ceiling(inputQuantity / (double)formulaes[inputName].OutputQuantity)));
+            }
+
+            return 0;
+        }
+
+        private static int ExecuteReactions(Formulae formulae, int multiplier)
+        {
+            foreach (var (inputName, inputQuantity) in formulae.InputMinerals)
+            {
+                int currentMultiplier = multiplier;
+
+                if (inputName == "ORE")
+                    continue;
+
+                reagentNeeded[inputName] *= currentMultiplier;
+                currentMultiplier = (int)Ceiling(inputQuantity / (double)formulaes[inputName].OutputQuantity);
+
+                ExecuteReactions(formulaes[inputName], currentMultiplier);
+            }
+
+            return 0;
         }
 
         private static int ExecuteFormulae(Formulae formulae, int outputTargetQuantity)
@@ -64,6 +106,7 @@ namespace Advent_of_Code_2019
             {
                 if (formulaes[inputName].InputMinerals.Exists(m => m.name == "ORE"))
                     reagentNeeded[inputName] += (inputQuantity * outputTargetQuantity);
+                //reagentNeeded[inputName] += (formulaes[inputName].OutputQuantity * formulaes[inputName].InputMinerals.First().quantity);
 
                 else
                     ExecuteFormulae(formulaes[inputName], inputQuantity);
@@ -71,7 +114,7 @@ namespace Advent_of_Code_2019
 
             return 0;
         }
-
+        
         private class Formulae
         {
             public List<(string name, int quantity)> InputMinerals;
