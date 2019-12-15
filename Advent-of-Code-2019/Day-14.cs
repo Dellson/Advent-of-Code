@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using static System.Math;
 
 namespace Advent_of_Code_2019
 {
@@ -30,11 +29,11 @@ namespace Advent_of_Code_2019
                     ingredients.Add(value);
                 }
 
-                formulaes.Add(outputKey, new Formulae(ingredients, outputKey, outputQuantity));
+                formulaes.Add(outputKey, new Formulae(ingredients, outputQuantity));
             }
         }
 
-        public static int Puzzle()
+        public static void Puzzle()
         {
             int totalCount = 0;
 
@@ -58,11 +57,9 @@ namespace Advent_of_Code_2019
             }
 
             Console.WriteLine(totalCount);
-
-            return totalCount;
         }
 
-        private static int CountUsage(Formulae formulae, int multiplier)
+        private static void CountUsage(Formulae formulae, int multiplier)
         {
             foreach (var (inputName, inputQuantity) in formulae.InputMinerals)
             {
@@ -71,22 +68,18 @@ namespace Advent_of_Code_2019
 
                 reagentNeeded[inputName] += (multiplier * inputQuantity);
 
-                CountUsage(formulaes[inputName], ((int)Ceiling(multiplier * inputQuantity / (double)formulaes[inputName].OutputQuantity)));
+                CountUsage(formulaes[inputName], ((int)Math.Ceiling(multiplier * inputQuantity / (double)formulaes[inputName].OutputQuantity)));
             }
-
-            return 0;
         }
         
         private class Formulae
         {
             public List<(string name, int quantity)> InputMinerals;
-            public readonly string OutputMineral;
             public readonly int OutputQuantity;
 
-            public Formulae(List<(string, int)> im, string om, int oq)
+            public Formulae(List<(string, int)> im, int oq)
             {
                 InputMinerals = im;
-                OutputMineral = om;
                 OutputQuantity = oq;
             }
         }
