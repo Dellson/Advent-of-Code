@@ -9,9 +9,9 @@ namespace Advent_of_Code_2019
     class Day_14
     {
         private static readonly Dictionary<string, ReactionFormulae> _reactionsFormulaes = new Dictionary<string, ReactionFormulae>();
-        private static readonly Dictionary<string, int> _reagentsRequiredStorage = new Dictionary<string, int>();
-        private static Dictionary<string, int> _reagentsRequiredOperational = new Dictionary<string, int>();
-        private static readonly Dictionary<string, int> _leftoverReagents = new Dictionary<string, int>();
+        private static readonly Dictionary<string, long> _reagentsRequiredStorage = new Dictionary<string, long>();
+        private static Dictionary<string, long> _reagentsRequiredOperational = new Dictionary<string, long>();
+        private static readonly Dictionary<string, long> _leftoverReagents = new Dictionary<string, long>();
         private const string BasicReagentKey = "ORE";
 
         static Day_14()
@@ -20,8 +20,8 @@ namespace Advent_of_Code_2019
 
             foreach (var reaction in inputReactions)
             {
-                Dictionary<string, int> parsedReagents = new Dictionary<string, int>();
-                int productQuantity =
+                Dictionary<string, long> parsedReagents = new Dictionary<string, long>();
+                long productQuantity =
                     Convert.ToInt32(Regex.Match(reaction, @"(?<=\=\>\s{1})\d+").Value);
                 string productKey = Regex.Match(reaction, @"(?<=\=\>\s{1}\d+ )\w+").Value;
 
@@ -40,39 +40,39 @@ namespace Advent_of_Code_2019
         public static void Puzzle()
         {
             double totalCount = 0;
-            int fuelAmount = 0;
+            long fuelAmount = 0;
 
+            // PART 1
+            _reagentsRequiredOperational = new Dictionary<string, long>(_reagentsRequiredStorage);
+            CalculateAmountOfReagentsRequiredForGivenProduct(_reactionsFormulaes["FUEL"], 1);
 
-            //CalculateAmountOfReagentsRequiredForGivenProduct(_reactionsFormulaes["FUEL"], 1);
+            totalCount = _reagentsRequiredOperational
+                .Where(reagent => _reactionsFormulaes[reagent.Key].Reagents.ContainsKey(BasicReagentKey))
+                .Sum(r => _reagentsRequiredOperational[r.Key] * _reactionsFormulaes[r.Key].Reagents[BasicReagentKey]);
 
-            //int totalCount = _reagentsRequired
-            //    .Where(reagent => _reactionsFormulaes[reagent.Key].Reagents.ContainsKey(BasicReagentKey))
-            //    .Sum(r => _reagentsRequired[r.Key] * _reactionsFormulaes[r.Key].Reagents[BasicReagentKey]);
+            Console.WriteLine(totalCount);
 
-            //Console.WriteLine(totalCount);
-
-            // PART 2
-
-            for (; totalCount < 1000000000000; fuelAmount++)
+            // PART 2 - HACK
+            for (long multiplier = 946796; totalCount < 1000000000000; multiplier = multiplier > 2 ? multiplier / 2 : 1)
             {
-                _reagentsRequiredOperational = new Dictionary<string, int>(_reagentsRequiredStorage);
+                _reagentsRequiredOperational = new Dictionary<string, long>(_reagentsRequiredStorage);
 
-                CalculateAmountOfReagentsRequiredForGivenProduct(_reactionsFormulaes["FUEL"], 1);
+                CalculateAmountOfReagentsRequiredForGivenProduct(_reactionsFormulaes["FUEL"], multiplier);
+                fuelAmount += multiplier;
 
                 totalCount += _reagentsRequiredOperational
                     .Where(reagent => _reactionsFormulaes[reagent.Key].Reagents.ContainsKey(BasicReagentKey))
                     .Sum(r => _reagentsRequiredOperational[r.Key] * _reactionsFormulaes[r.Key].Reagents[BasicReagentKey]);
             }
 
-            Console.WriteLine(totalCount);
-            Console.WriteLine(fuelAmount);
+            Console.WriteLine(fuelAmount - 1);
         }
 
-        private static void CalculateAmountOfReagentsRequiredForGivenProduct(ReactionFormulae formulae, int requestsCount)
+        private static void CalculateAmountOfReagentsRequiredForGivenProduct(ReactionFormulae formulae, long requestsCount)
         {
             foreach (var reagent in formulae.Reagents.Where(r => r.Key != BasicReagentKey))
             {
-                int requestedReagentAmount = requestsCount * reagent.Value;
+                long requestedReagentAmount = requestsCount * reagent.Value;
 
                 if (requestedReagentAmount >= _leftoverReagents[reagent.Key])
                 {
@@ -85,9 +85,9 @@ namespace Advent_of_Code_2019
                     requestedReagentAmount = 0;
                 }
 
-                int reagentsProducedPerReaction = _reactionsFormulaes[reagent.Key].Product;
-                int numberOfReactionsRequired = (int)Math.Ceiling(requestedReagentAmount / (double)reagentsProducedPerReaction);
-                int resultingNumberOfProducts = numberOfReactionsRequired * reagentsProducedPerReaction;
+                long reagentsProducedPerReaction = _reactionsFormulaes[reagent.Key].Product;
+                long numberOfReactionsRequired = (long)Math.Ceiling(requestedReagentAmount / (double)reagentsProducedPerReaction);
+                long resultingNumberOfProducts = numberOfReactionsRequired * reagentsProducedPerReaction;
                 _leftoverReagents[reagent.Key] += (resultingNumberOfProducts - requestedReagentAmount);
                 _reagentsRequiredOperational[reagent.Key] += numberOfReactionsRequired;
                 //     THESE TWO ARE EQUAL     //
@@ -102,10 +102,10 @@ namespace Advent_of_Code_2019
         
         private class ReactionFormulae
         {
-            public Dictionary<string, int> Reagents = new Dictionary<string, int>();
-            public readonly int Product;
+            public Dictionary<string, long> Reagents = new Dictionary<string, long>();
+            public readonly long Product;
 
-            public ReactionFormulae(Dictionary<string, int> reagents, int product)
+            public ReactionFormulae(Dictionary<string, long> reagents, long product)
             {
                 Reagents = reagents;
                 Product = product;
