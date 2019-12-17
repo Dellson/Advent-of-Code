@@ -1,86 +1,93 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Advent_of_Code_2019
 {
     class Day_14
     {
-        private static Dictionary<string, Formulae> formulaes = new Dictionary<string, Formulae>();
-        private static Dictionary<string, int> reagentNeeded = new Dictionary<string, int>();
+        private static readonly Dictionary<string, ReactionFormulae> _reactionsFormulaes = new Dictionary<string, ReactionFormulae>();
+        private static readonly Dictionary<string, int> _reagentsRequired = new Dictionary<string, int>();
+        private static readonly Dictionary<string, int> _leftoverReagents = new Dictionary<string, int>();
+        private const string BasicReagentKey = "ORE";
 
         static Day_14()
         {
-            string[] inputData = File.ReadAllLines(Program.InputFolderPath + "Day-14-input.txt");
+            string[] inputReactions = File.ReadAllLines(Program.InputFolderPath + "Day-14-input.txt");
 
-            for (int i = 0; i < inputData.Length; i++)
+            foreach (var reaction in inputReactions)
             {
-                MatchCollection inputsGeneral = Regex.Matches(inputData[i], @"\d+ \w+(?=\s{1}|,)");
-                string outputKey = Regex.Match(inputData[i], @"(?<=\=\>\s{1}\d+ )\w+").Value;
-                int outputQuantity = Convert.ToInt32(Regex.Match(inputData[i], @"(?<=\=\>\s{1})\d+").Value);
-                List<(string, int)> ingredients = new List<(string, int)>();
+                Dictionary<string, int> parsedReagents = new Dictionary<string, int>();
+                int productQuantity =
+                    Convert.ToInt32(Regex.Match(reaction, @"(?<=\=\>\s{1})\d+").Value);
+                string productKey = Regex.Match(reaction, @"(?<=\=\>\s{1}\d+ )\w+").Value;
 
-                for (int j = 0; j < inputsGeneral.Count; j++)
+                foreach (Match reagentsRaw in Regex.Matches(reaction, @"\d+ \w+(?=\s{1}|,)"))
                 {
-                    var value = (inputsGeneral[j].Value.Split(' ')[1],
-                        Convert.ToInt32(inputsGeneral[j].Value.Split(' ')[0]));
-
-                    ingredients.Add(value);
+                    string[] reagents = reagentsRaw.Value.Split(' ');
+                    parsedReagents.Add(reagents[1], Convert.ToInt32(reagents[0]));
                 }
 
-                formulaes.Add(outputKey, new Formulae(ingredients, outputQuantity));
+                _reactionsFormulaes.Add(productKey, new ReactionFormulae(parsedReagents, productQuantity));
+                _reagentsRequired.Add(productKey, 0);
+                _leftoverReagents.Add(productKey, 0);
             }
         }
 
         public static void Puzzle()
         {
-            int totalCount = 0;
+            CalculateAmountOfReagentsRequiredForGivenProduct(_reactionsFormulaes["FUEL"], 1);
 
-            foreach (var formulae in formulaes)
-                reagentNeeded.Add(formulae.Key, 0);
-
-            CountUsage(formulaes["FUEL"], 1);
-
-            foreach (var reagent in new Dictionary<string, int>(reagentNeeded))
-            {
-                var currentFormulae = formulaes[reagent.Key];
-
-                if (currentFormulae.InputMinerals[0].name != "ORE")
-                    continue;
-
-                while (reagentNeeded[reagent.Key] > 0)
-                {
-                    reagentNeeded[reagent.Key] -= currentFormulae.OutputQuantity;
-                    totalCount += currentFormulae.InputMinerals[0].quantity;
-                }
-            }
+            int totalCount = _reagentsRequired
+                .Where(reagent => _reactionsFormulaes[reagent.Key].Reagents.ContainsKey(BasicReagentKey))
+                .Sum(r => _reagentsRequired[r.Key] * _reactionsFormulaes[r.Key].Reagents[BasicReagentKey]);
 
             Console.WriteLine(totalCount);
         }
 
-        private static void CountUsage(Formulae formulae, int multiplier)
+        private static void CalculateAmountOfReagentsRequiredForGivenProduct(ReactionFormulae formulae, int requestsCount)
         {
-            foreach (var (inputName, inputQuantity) in formulae.InputMinerals)
+            foreach (var reagent in formulae.Reagents.Where(r => r.Key != BasicReagentKey))
             {
-                if (inputName == "ORE")
-                    continue;
+                int requestedReagentAmount = requestsCount * reagent.Value;
 
-                reagentNeeded[inputName] += (multiplier * inputQuantity);
+                if (requestedReagentAmount >= _leftoverReagents[reagent.Key])
+                {
+                    requestedReagentAmount -= _leftoverReagents[reagent.Key];
+                    _leftoverReagents[reagent.Key] = 0;
+                }
+                else
+                {
+                    _leftoverReagents[reagent.Key] -= requestedReagentAmount;
+                    requestedReagentAmount = 0;
+                }
 
-                CountUsage(formulaes[inputName], ((int)Math.Ceiling(multiplier * inputQuantity / (double)formulaes[inputName].OutputQuantity)));
+                int reagentsProducedPerReaction = _reactionsFormulaes[reagent.Key].Product;
+                int numberOfReactionsRequired = (int)Math.Ceiling(requestedReagentAmount / (double)reagentsProducedPerReaction);
+                int resultingNumberOfProducts = numberOfReactionsRequired * reagentsProducedPerReaction;
+                _leftoverReagents[reagent.Key] += (resultingNumberOfProducts - requestedReagentAmount);
+                _reagentsRequired[reagent.Key] += numberOfReactionsRequired;
+                //     THESE TWO ARE EQUAL     //
+                //int numberOfReactionsRequired = (int)Math.Ceiling(requestedReagentAmount / (double)_reactionsFormulaes[reagent.Key].Product);
+                //_leftoverReagents[reagent.Key] += (numberOfReactionsRequired * _reactionsFormulaes[reagent.Key].Product) - requestedReagentAmount;
+                //_reagentsRequired[reagent.Key] += numberOfReactionsRequired;
+
+                if (!_reactionsFormulaes[reagent.Key].Reagents.ContainsKey(BasicReagentKey))
+                    CalculateAmountOfReagentsRequiredForGivenProduct(_reactionsFormulaes[reagent.Key], numberOfReactionsRequired);
             }
         }
         
-        private class Formulae
+        private class ReactionFormulae
         {
-            public List<(string name, int quantity)> InputMinerals;
-            public readonly int OutputQuantity;
+            public Dictionary<string, int> Reagents = new Dictionary<string, int>();
+            public readonly int Product;
 
-            public Formulae(List<(string, int)> im, int oq)
+            public ReactionFormulae(Dictionary<string, int> reagents, int product)
             {
-                InputMinerals = im;
-                OutputQuantity = oq;
+                Reagents = reagents;
+                Product = product;
             }
         }
     }
