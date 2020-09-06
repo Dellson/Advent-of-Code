@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -9,48 +10,40 @@ namespace Advent_of_Code_2019
     {
         public static void Puzzle()
         {
-            var list =
-                File.ReadAllLines(Program.InputFolderPath + "Day-02-input.txt")[0];
-
-            var arrOriginal = Regex.Matches(list, @"-?\d+")
-                .Cast<Match>()
-                .Select(number => Convert.ToInt32(number.Value))
-                .ToArray();
-
-            int[] arr = new int[arrOriginal.Length];
-            arrOriginal.CopyTo(arr, 0);
-
-            Console.WriteLine($"Puzzle one answer {CalculateOutput(arrOriginal, 12, 2, 12, 2)}");
-            Console.WriteLine($"Puzzle two answer {CalculateOutput(arrOriginal, 0, 0, arrOriginal.Length - 1, arrOriginal.Length - 1)}");
+            Console.WriteLine($"Puzzle one answer: {PuzzleOne()}");
+            Console.WriteLine($"Puzzle one answer: {PuzzleTwo()}");
         }
 
-        private static int CalculateOutput(int[] originalArray, int valueOneStart, int valueTwoStart, int valueOneMax, int valueTwoMax)
+        private static int PuzzleOne()
         {
-            int[] array = new int[originalArray.Length];
+            IntcodeComputerV2 intcodeComputer = new IntcodeComputerV2("Day-02-input.txt");
 
-            for (int j = valueOneStart; j <= valueOneMax; j++)
+            intcodeComputer.Instructions[1] = 12;   // noun
+            intcodeComputer.Instructions[2] = 2;    // verb
+
+            return intcodeComputer.CalculateOutput();
+        }
+
+        private static int PuzzleTwo()
+        {
+            const int minVal = 0;
+            const int maxVal = 99;
+            const int outputSought = 19690720;
+
+            for (int noun = minVal; noun <= maxVal; ++noun)
             {
-                for (int k = valueTwoStart; k <= valueTwoMax; k++)
+                for (int verb = minVal; verb <= maxVal; ++verb)
                 {
-                    originalArray.CopyTo(array, 0);
-                    array[1] = j;
-                    array[2] = k;
+                    IntcodeComputerV2 intcodeComputer = new IntcodeComputerV2("Day-02-input.txt");
+                    intcodeComputer.Instructions[1] = noun;
+                    intcodeComputer.Instructions[2] = verb;
 
-                    for (int i = 0; i < array.Length && array[i] != 99; i+=4)
-                    {
-                        if (array[i] == 1)
-                            array[array[i + 3]] = array[array[i + 1]] + array[array[i + 2]];
-
-                        else if (array[i] == 2)
-                            array[array[i + 3]] = array[array[i + 1]] * array[array[i + 2]];
-                    }
-
-                    if (array[0] == 19690720)
-                        return (j * 100 + k);
+                    if (intcodeComputer.CalculateOutput() == outputSought)
+                        return (noun * 100 + verb);
                 }
             }
 
-            return array[0];
+            return -1;
         }
     }
 }

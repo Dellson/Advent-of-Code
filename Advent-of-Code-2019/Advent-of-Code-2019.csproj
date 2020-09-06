@@ -54,6 +54,7 @@
     <Compile Include="Day-02.cs" />
     <Compile Include="Day-01.cs" />
     <Compile Include="IntcodeComputer.cs" />
+    <Compile Include="IntcodeComputerV2.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
