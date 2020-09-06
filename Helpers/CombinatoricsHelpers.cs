@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Helpers
 {
-    public class Helpers
+    public class CombinatoricsHelpers
     {
         public static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length)
         {

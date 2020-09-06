@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Advent_of_Code_2019
 {
@@ -11,17 +7,18 @@ namespace Advent_of_Code_2019
         public static void Puzzle()
         {
             Console.WriteLine($"Puzzle one answer: {PuzzleOne()}");
-            Console.WriteLine($"Puzzle one answer: {PuzzleTwo()}");
+            Console.WriteLine($"Puzzle two answer: {PuzzleTwo()}");
         }
 
         private static int PuzzleOne()
         {
-            IntcodeComputerV2 intcodeComputer = new IntcodeComputerV2("Day-02-input.txt");
+            IntcodeComputerV2 ic = new IntcodeComputerV2("Day-02-input.txt");
 
-            intcodeComputer.Instructions[1] = 12;   // noun
-            intcodeComputer.Instructions[2] = 2;    // verb
+            ic.Instructions[1] = 12;
+            ic.Instructions[2] = 2;
+            ic.CalculateOutput();
 
-            return intcodeComputer.CalculateOutput();
+            return ic.Instructions[0];
         }
 
         private static int PuzzleTwo()
@@ -34,11 +31,12 @@ namespace Advent_of_Code_2019
             {
                 for (int verb = minVal; verb <= maxVal; ++verb)
                 {
-                    IntcodeComputerV2 intcodeComputer = new IntcodeComputerV2("Day-02-input.txt");
-                    intcodeComputer.Instructions[1] = noun;
-                    intcodeComputer.Instructions[2] = verb;
+                    IntcodeComputerV2 ic = new IntcodeComputerV2("Day-02-input.txt");
+                    ic.Instructions[1] = noun;
+                    ic.Instructions[2] = verb;
+                    ic.CalculateOutput();
 
-                    if (intcodeComputer.CalculateOutput() == outputSought)
+                    if (ic.Instructions[0] == outputSought)
                         return (noun * 100 + verb);
                 }
             }

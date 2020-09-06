@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 using static System.Console;
-using static Helpers.Helpers;
+using static Helpers.CombinatoricsHelpers;
 
 namespace Advent_of_Code_2015
 {
