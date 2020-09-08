@@ -30,8 +30,7 @@ namespace Advent_of_Code_2019
             IEnumerable<int> input = inputParams.ToList();
             var enumerator = input.GetEnumerator();
 
-            //for (int pointer = 0; pointer < Instructions.Count && Instructions[pointer] != 99;)
-            for (; pointer < Instructions.Count && Instructions[pointer] != 99;)
+            for (; pointer < Instructions.Count;)
             {
                 string command = Instructions[pointer].ToString().PadLeft(4, '0');
                 string opcode = command.Substring(command.Length - 2, 2);
@@ -39,7 +38,7 @@ namespace Advent_of_Code_2019
                 int paramOne = 0;
                 int paramTwo = 0;
 
-                if (opcode != "03" && opcode != "04")   // TODO code smell
+                if (opcode != "03" && opcode != "04" && opcode != "99")   // TODO code smell
                 {
                     paramOne = command[1] == '0' ? Instructions[Instructions[pointer + 1]] : Instructions[pointer + 1];
                     paramTwo = command[0] == '0' ? Instructions[Instructions[pointer + 2]] : Instructions[pointer + 2];
@@ -67,13 +66,6 @@ namespace Advent_of_Code_2019
                         output = Instructions[Instructions[pointer + 1]];
                         pointer += 2;
                         return output;
-                        //output = 
-                        //if (output != 139629729)
-                        //{
-                        //    return output;
-                        //}
-                        //else
-                        //    break;
 
                     case "05":  
                         pointer = (paramOne != 0) ? paramTwo : pointer + 3;
@@ -94,16 +86,11 @@ namespace Advent_of_Code_2019
                         break;
 
                     case "99":
-                        throw new ArgumentException("Code 99");
-                        return int.MaxValue;
+                        return -1;
 
                     default:
                         throw new ArgumentException("Invalid opcode value");
                 }
-            }
-            if (Instructions[pointer] == 99)
-            {
-                throw new ArgumentException("Code 99");
             }
 
             return output;

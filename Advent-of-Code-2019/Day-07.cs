@@ -6,16 +6,19 @@ namespace Advent_of_Code_2019
 {
     public static class Day_07
     {
+        private const string inputFilename = "Day-07-input.txt";
+        private const int amplifiersCount = 5;
+
         public static void Puzzle()
         {
-            //PuzzleOne();
+            PuzzleOne();
             PuzzleTwo();
         }
 
         public static void PuzzleOne()
         {
             int[] phaseValues = new int[] { 0, 1, 2, 3, 4 };
-            var combinations = GetPermutations(phaseValues, 5);
+            var combinations = GetPermutations(phaseValues, amplifiersCount);
 
             int maxVal = int.MinValue;
 
@@ -24,9 +27,9 @@ namespace Advent_of_Code_2019
                 int[] array = inputArray.ToArray();
                 int input = 0;
 
-                for (int i = 0; i < 5; ++i)
+                for (int i = 0; i < amplifiersCount; ++i)
                 {
-                    IntcodeComputerV2 ic = new IntcodeComputerV2("Day-07-input.txt");
+                    IntcodeComputerV2 ic = new IntcodeComputerV2(inputFilename);
                     input = ic.CalculateOutput(array[i], input);
                     maxVal = input > maxVal ? input : maxVal;
                 }
@@ -38,60 +41,27 @@ namespace Advent_of_Code_2019
         public static void PuzzleTwo()
         {
             int[] phaseValues = new int[] { 5, 6, 7, 8, 9 };
-            var combinations = GetPermutations(phaseValues, 5);
+            var combinations = GetPermutations(phaseValues, amplifiersCount);
 
             int maxVal = int.MinValue;
 
             foreach (var inputArray in combinations)
             {
                 var ic = GetComputerSet();
-                //int[] array = inputArray.ToArray();
-                int[] array = new int[] { 9, 7, 8, 5, 6 };
+                int[] array = inputArray.ToArray();
                 int input = 0;
-                int i = 0;
-                int lastOutput = int.MinValue;
-                int tOutput = int.MinValue;
+                int i;
 
-                int counter = 0;
-
-                try
+                for (i = 0; i < amplifiersCount; ++i) // load phase settings - once per amplifier
                 {
-                    while (true)
-                    {
-                        if (counter < 5)
-                        {
-                            input = ic[i].CalculateOutput(array[i], input);
-                        }
-                        else
-                        {
-                            input = ic[i].CalculateOutput(input);
-                        }
-                        counter++;
-
-                        //if (input < tOutput)
-                        //    break;
-                        //else
-                        //    tOutput = input;
-
-                        //if (i == 4)
-                        //{
-                        //    lastOutput = input;
-                        //}
-
-                        maxVal = input > maxVal ? input : maxVal;
-
-                        i++;
-                        i %= 5;
-                    }
+                    input = ic[i].CalculateOutput(array[i], input);
                 }
-                catch (ArgumentException ex)
+
+                for (i = 0; input != -1; ++i, i %= amplifiersCount) // run feedback loop
                 {
-
+                    input = ic[i].CalculateOutput(input);
+                    maxVal = input > maxVal ? input : maxVal;
                 }
-                
-
-                maxVal = input > maxVal ? input : maxVal;
-                break;
             }
 
             Console.WriteLine($"Puzzle two answer: {maxVal}");
@@ -101,11 +71,11 @@ namespace Advent_of_Code_2019
         {
             IntcodeComputerV2[] ic = new IntcodeComputerV2[]
             {
-                new IntcodeComputerV2("Day-07-input.txt"),
-                new IntcodeComputerV2("Day-07-input.txt"),
-                new IntcodeComputerV2("Day-07-input.txt"),
-                new IntcodeComputerV2("Day-07-input.txt"),
-                new IntcodeComputerV2("Day-07-input.txt")
+                new IntcodeComputerV2(inputFilename),
+                new IntcodeComputerV2(inputFilename),
+                new IntcodeComputerV2(inputFilename),
+                new IntcodeComputerV2(inputFilename),
+                new IntcodeComputerV2(inputFilename)
             };
             return ic;
         }
