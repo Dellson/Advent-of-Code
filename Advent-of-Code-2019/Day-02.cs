@@ -14,11 +14,11 @@ namespace Advent_of_Code_2019
         {
             IntcodeComputerV2 ic = new IntcodeComputerV2("Day-02-input.txt");
 
-            ic.Instructions[1] = 12;
-            ic.Instructions[2] = 2;
+            ic.Ints[1] = 12;
+            ic.Ints[2] = 2;
             ic.CalculateOutput();
 
-            return ic.Instructions[0];
+            return ic.Ints[0];
         }
 
         private static long PuzzleTwo()
@@ -32,11 +32,11 @@ namespace Advent_of_Code_2019
                 for (int verb = minVal; verb <= maxVal; ++verb)
                 {
                     IntcodeComputerV2 ic = new IntcodeComputerV2("Day-02-input.txt");
-                    ic.Instructions[1] = noun;
-                    ic.Instructions[2] = verb;
+                    ic.Ints[1] = noun;
+                    ic.Ints[2] = verb;
                     ic.CalculateOutput();
 
-                    if (ic.Instructions[0] == outputSought)
+                    if (ic.Ints[0] == outputSought)
                         return (noun * 100 + verb);
                 }
             }

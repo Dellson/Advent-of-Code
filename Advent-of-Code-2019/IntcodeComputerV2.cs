@@ -8,9 +8,10 @@ namespace Advent_of_Code_2019
 {
     public class IntcodeComputerV2
     {
-        public List<long> Instructions;
+        public List<long> Ints;
         private long output = -1;
-        private int pointer = 0;
+        private int ptr = 0;
+        private int relativeBase = 0;
 
         public IntcodeComputerV2(string fileName)
         {
@@ -22,7 +23,7 @@ namespace Advent_of_Code_2019
                 .Select(number => Convert.ToInt64(number.Value))
                 .ToArray();
 
-            Instructions = new List<long>(arrOriginal);
+            Ints = new List<long>(arrOriginal);
         }
 
         public long CalculateOutput(params long[] inputParams)
@@ -30,59 +31,63 @@ namespace Advent_of_Code_2019
             IEnumerable<long> input = inputParams.ToList();
             var enumerator = input.GetEnumerator();
 
-            for (; pointer < Instructions.Count;)
+            for (; ptr < Ints.Count;)
             {
-                string command = Instructions[pointer].ToString().PadLeft(4, '0');
-                string opcode = command.Substring(command.Length - 2, 2);
+                string cmd = Ints[ptr].ToString().PadLeft(4, '0');
+                string opcode = cmd.Substring(cmd.Length - 2, 2);
 
                 long paramOne = 0;
                 long paramTwo = 0;
 
-                if (opcode != "03" && opcode != "04" && opcode != "99")   // TODO code smell
+                if (opcode != "03" && opcode != "04" && opcode != "09" && opcode != "99")
                 {
-                    paramOne = command[1] == '0' ? Instructions[(int)Instructions[pointer + 1]] : Instructions[pointer + 1];
-                    paramTwo = command[0] == '0' ? Instructions[(int)Instructions[pointer + 2]] : Instructions[pointer + 2];
+                    paramOne = GetParamByMode(cmd[1], 1);
+                    paramTwo = GetParamByMode(cmd[0], 2);
                 }
 
                 switch (opcode)
                 {
                     case "01":
-                        Instructions[(int)Instructions[pointer + 3]] = paramOne + paramTwo;
-                        pointer += 4;
+                        Ints[(int)Ints[ptr + 3]] = paramOne + paramTwo;
+                        ptr += 4;
                         break;
 
                     case "02":
-                        Instructions[(int)Instructions[pointer + 3]] = paramOne * paramTwo;
-                        pointer += 4;
+                        Ints[(int)Ints[ptr + 3]] = paramOne * paramTwo;
+                        ptr += 4;
                         break;
 
                     case "03":
                         enumerator.MoveNext();
-                        Instructions[(int)Instructions[pointer + 1]] = enumerator.Current;
-                        pointer += 2;
+                        Ints[(int)Ints[ptr + 1]] = enumerator.Current;
+                        ptr += 2;
                         break;
 
                     case "04":
-                        output = command[1] == '0' ? Instructions[(int)Instructions[pointer + 1]] : Instructions[pointer + 1];
-                        pointer += 2;
+                        output = GetParamByMode(cmd[1], 1);
+                        ptr += 2;
                         return output;
 
-                    case "05":  
-                        pointer = (paramOne != 0) ? (int)paramTwo : pointer + 3;
+                    case "05":
+                        ptr = (paramOne != 0) ? (int)paramTwo : ptr + 3;
                         break;
 
                     case "06":
-                        pointer = (paramOne == 0) ? (int)paramTwo : pointer + 3;
+                        ptr = (paramOne == 0) ? (int)paramTwo : ptr + 3;
                         break;
 
                     case "07":
-                        Instructions[(int)Instructions[pointer + 3]] = (paramOne < paramTwo) ? 1 : 0;
-                        pointer += 4;
+                        Ints[(int)Ints[ptr + 3]] = (paramOne < paramTwo) ? 1 : 0;
+                        ptr += 4;
                         break;
 
                     case "08":
-                        Instructions[(int)Instructions[pointer + 3]] = (paramOne == paramTwo) ? 1 : 0;
-                        pointer += 4;
+                        Ints[(int)Ints[ptr + 3]] = (paramOne == paramTwo) ? 1 : 0;
+                        ptr += 4;
+                        break;
+
+                    case "09":
+                        relativeBase += (int)GetParamByMode(cmd[1], 1);
                         break;
 
                     case "99":
@@ -94,6 +99,32 @@ namespace Advent_of_Code_2019
             }
 
             return output;
+        }
+    
+        private long GetParamByMode(char mode, int argPos)
+        {
+            long param;
+
+            switch (mode)
+            {
+                case '0':   // positional
+                    param = Ints[
+                        (int)Ints[ptr + argPos]]; 
+                    break;
+
+                case '1':   // immediate
+                    param = Ints[ptr + argPos];
+                    break;
+
+                case '2':   // relative
+                    param = Ints[
+                        (int)Ints[ptr + argPos + relativeBase]];
+                    break;
+
+                default:
+                    throw new ArgumentException("Invalid mode");
+            }
+            return param;
         }
     }
 }
