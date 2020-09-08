@@ -10,6 +10,7 @@ namespace Advent_of_Code_2019
     {
         public List<int> Instructions;
         private int output = -1;
+        private int pointer = 0;
 
         public IntcodeComputerV2(string fileName)
         {
@@ -29,7 +30,8 @@ namespace Advent_of_Code_2019
             IEnumerable<int> input = inputParams.ToList();
             var enumerator = input.GetEnumerator();
 
-            for (int pointer = 0; pointer < Instructions.Count && Instructions[pointer] != 99;)
+            //for (int pointer = 0; pointer < Instructions.Count && Instructions[pointer] != 99;)
+            for (; pointer < Instructions.Count && Instructions[pointer] != 99;)
             {
                 string command = Instructions[pointer].ToString().PadLeft(4, '0');
                 string opcode = command.Substring(command.Length - 2, 2);
@@ -64,7 +66,14 @@ namespace Advent_of_Code_2019
                     case "04":
                         output = Instructions[Instructions[pointer + 1]];
                         pointer += 2;
-                        break;
+                        return output;
+                        //output = 
+                        //if (output != 139629729)
+                        //{
+                        //    return output;
+                        //}
+                        //else
+                        //    break;
 
                     case "05":  
                         pointer = (paramOne != 0) ? paramTwo : pointer + 3;
@@ -85,11 +94,16 @@ namespace Advent_of_Code_2019
                         break;
 
                     case "99":
-                        break;
+                        throw new ArgumentException("Code 99");
+                        return int.MaxValue;
 
                     default:
                         throw new ArgumentException("Invalid opcode value");
                 }
+            }
+            if (Instructions[pointer] == 99)
+            {
+                throw new ArgumentException("Code 99");
             }
 
             return output;
