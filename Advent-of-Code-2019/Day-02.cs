@@ -10,7 +10,7 @@ namespace Advent_of_Code_2019
             Console.WriteLine($"Puzzle two answer: {PuzzleTwo()}");
         }
 
-        private static int PuzzleOne()
+        private static long PuzzleOne()
         {
             IntcodeComputerV2 ic = new IntcodeComputerV2("Day-02-input.txt");
 
@@ -21,7 +21,7 @@ namespace Advent_of_Code_2019
             return ic.Instructions[0];
         }
 
-        private static int PuzzleTwo()
+        private static long PuzzleTwo()
         {
             const int minVal = 0;
             const int maxVal = 99;

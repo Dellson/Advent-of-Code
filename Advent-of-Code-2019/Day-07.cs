@@ -20,12 +20,12 @@ namespace Advent_of_Code_2019
             int[] phaseValues = new int[] { 0, 1, 2, 3, 4 };
             var combinations = GetPermutations(phaseValues, amplifiersCount);
 
-            int maxVal = int.MinValue;
+            long maxVal = long.MinValue;
 
             foreach (var inputArray in combinations)
             {
                 int[] array = inputArray.ToArray();
-                int input = 0;
+                long input = 0;
 
                 for (int i = 0; i < amplifiersCount; ++i)
                 {
@@ -43,13 +43,13 @@ namespace Advent_of_Code_2019
             int[] phaseValues = new int[] { 5, 6, 7, 8, 9 };
             var combinations = GetPermutations(phaseValues, amplifiersCount);
 
-            int maxVal = int.MinValue;
+            long maxVal = long.MinValue;
 
             foreach (var inputArray in combinations)
             {
                 var ic = GetComputerSet();
                 int[] array = inputArray.ToArray();
-                int input = 0;
+                long input = 0;
                 int i;
 
                 for (i = 0; i < amplifiersCount; ++i) // load phase settings - once per amplifier
