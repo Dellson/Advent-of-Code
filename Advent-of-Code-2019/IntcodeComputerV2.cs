@@ -8,7 +8,7 @@ namespace Advent_of_Code_2019
 {
     public class IntcodeComputerV2
     {
-        public List<long> Ints;
+        public Dictionary<long, long> Ints = new Dictionary<long, long>();
         private long output = -1;
         private int ptr = 0;
         private int relativeBase = 0;
@@ -23,7 +23,8 @@ namespace Advent_of_Code_2019
                 .Select(number => Convert.ToInt64(number.Value))
                 .ToArray();
 
-            Ints = new List<long>(arrOriginal);
+            for (int i = 0; i < arrOriginal.Length; i++)
+                Ints.Add(i, arrOriginal[i]);
         }
 
         public long CalculateOutput(params long[] inputParams)
@@ -88,6 +89,7 @@ namespace Advent_of_Code_2019
 
                     case "09":
                         relativeBase += (int)GetParamByMode(cmd[1], 1);
+                        ptr += 2;
                         break;
 
                     case "99":
@@ -117,8 +119,15 @@ namespace Advent_of_Code_2019
                     break;
 
                 case '2':   // relative
-                    param = Ints[
-                        (int)Ints[ptr + argPos + relativeBase]];
+                    int innerIndex = ptr + argPos + relativeBase;
+                    if (!Ints.ContainsKey(innerIndex))
+                        Ints.Add(innerIndex, 0);
+
+                    int index = (int)Ints[innerIndex];
+                    if (!Ints.ContainsKey(index))
+                        Ints.Add(index, 0);
+
+                    param = Ints[index];
                     break;
 
                 default:

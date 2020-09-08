@@ -18,7 +18,7 @@ namespace Advent_of_Code_2019
         {
             IntcodeComputerV2 ic = new IntcodeComputerV2(inputFilename);
 
-            Console.WriteLine($"Puzzle one answer: {ic.CalculateOutput()}");
+            Console.WriteLine($"Puzzle one answer: {ic.CalculateOutput(1)}");
         }
     }
 }
