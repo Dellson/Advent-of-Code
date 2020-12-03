@@ -36,9 +36,8 @@ namespace AdventOfCode2020
 
         static void Main(string[] args)
         {
-            //Day01.Puzzle();
+            Day01.Puzzle();
             //Day02.Puzzle();
-            Day03.Puzzle();
             ReadKey();
         }
     }
