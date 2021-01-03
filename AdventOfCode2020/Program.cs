@@ -40,7 +40,8 @@ namespace AdventOfCode2020
             //Day02.Puzzle();
             //Day03.Puzzle();
             //Day04.Puzzle();
-            Day05.Puzzle();
+            //Day05.Puzzle();
+            Day13.Puzzle();
             ReadKey();
         }
     }
