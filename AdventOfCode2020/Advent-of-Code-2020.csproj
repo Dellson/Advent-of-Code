@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Adevent-of-Code\Advent-of-Code.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Input\Day13.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

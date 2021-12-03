@@ -1,8 +1,8 @@
-﻿using AdventOfCode;
-using System;
+﻿using System;
 using System.IO;
+using AdventOfCode;
 
-namespace AdventOfCode2020
+namespace AdventOfCode2021
 {
     class Program : BaseProgram
     {
@@ -14,12 +14,7 @@ namespace AdventOfCode2020
 
         static void Main(string[] args)
         {
-            //Day01.Puzzle();
-            //Day02.Puzzle();
-            //Day03.Puzzle();
-            //Day04.Puzzle();
-            //Day05.Puzzle();
-            Day13.Puzzle();
+            Day01.Puzzle();
             Console.ReadKey();
         }
     }
