@@ -14,7 +14,7 @@ namespace AdventOfCode2021
 
         static void Main(string[] args)
         {
-            Day01.Puzzle();
+            Day03.Puzzle();
             Console.ReadKey();
         }
     }
