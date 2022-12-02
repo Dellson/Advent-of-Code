@@ -20,12 +20,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Advent-of-Code-2019", "Adve
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Advent-of-Code-2020", "AdventOfCode2020\Advent-of-Code-2020.csproj", "{8BE4649A-66AE-47DE-883A-A54EC424E39E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Advent-of-Code-2021", "Advent-of-Code-2021\Advent-of-Code-2021.csproj", "{B2BDEB23-6A90-4FD0-AB61-B53AB0953E77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Advent-of-Code-2021", "Advent-of-Code-2021\Advent-of-Code-2021.csproj", "{B2BDEB23-6A90-4FD0-AB61-B53AB0953E77}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9C73B2F0-0A9B-4E62-964A-E897D338C548} = {9C73B2F0-0A9B-4E62-964A-E897D338C548}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Advent-of-Code", "Adevent-of-Code\Advent-of-Code.csproj", "{9C73B2F0-0A9B-4E62-964A-E897D338C548}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Advent-of-Code", "Adevent-of-Code\Advent-of-Code.csproj", "{9C73B2F0-0A9B-4E62-964A-E897D338C548}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode2022", "AdventOfCode2022\AdventOfCode2022.csproj", "{92DE6819-0F71-490F-9A14-4618E2EF625F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{9C73B2F0-0A9B-4E62-964A-E897D338C548}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C73B2F0-0A9B-4E62-964A-E897D338C548}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C73B2F0-0A9B-4E62-964A-E897D338C548}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92DE6819-0F71-490F-9A14-4618E2EF625F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92DE6819-0F71-490F-9A14-4618E2EF625F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92DE6819-0F71-490F-9A14-4618E2EF625F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92DE6819-0F71-490F-9A14-4618E2EF625F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
