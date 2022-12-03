@@ -14,8 +14,7 @@ namespace AdventOfCode2022
 
         static void Main(string[] args)
         {
-            Day02.Puzzle();
-            Console.ReadKey();
+            Day03.Puzzle();
         }
     }
 }
