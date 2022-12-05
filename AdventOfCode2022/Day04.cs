@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode2022
 {
@@ -13,16 +14,15 @@ namespace AdventOfCode2022
             _input = Program.GetTextInputData("4");
             Console.WriteLine(Puzzle1().Sum());
             Console.WriteLine(Puzzle2().Sum());
-            Puzzle2();
         }
 
         private static IEnumerable<int> Puzzle1()
         {
             foreach (string line in _input)
             {
-                var s = ParseLine(line);                
-                yield return ((s.a1 >= s.b1 && s.a2 <= s.b2) ||
-                    (s.b1 >= s.a1 && s.b2 <= s.a2)) ? 1 : 0;
+                var (a1, a2, b1, b2) = ParseLine(line);                
+                yield return ((a1 >= b1 && a2 <= b2) ||
+                    (b1 >= a1 && b2 <= a2)) ? 1 : 0;
             }
         }
 
@@ -30,16 +30,14 @@ namespace AdventOfCode2022
         {
             foreach (string line in _input)
             {
-                var s = ParseLine(line);
-                yield return (s.a2 >= s.b1 && (s.a1 <= s.b2)) ? 1 : 0;
+                var (a1, a2, b1, b2) = ParseLine(line);
+                yield return (a2 >= b1 && (a1 <= b2)) ? 1 : 0;
             }
         }
         private static (int a1, int a2, int b1, int b2) ParseLine(string line)
         {
-            var splitted = line.Split(',');
-            var first = splitted[0].Split('-');
-            var second = splitted[1].Split('-');
-            return (Convert.ToInt32(first[0]), Convert.ToInt32(first[1]), Convert.ToInt32(second[0]), Convert.ToInt32(second[1]));
+            MatchCollection matches = Regex.Matches(line, @"\d+");
+            return (Convert.ToInt32(matches[0].Value), Convert.ToInt32(matches[1].Value), Convert.ToInt32(matches[2].Value), Convert.ToInt32(matches[3].Value));
         }
     }
 }
